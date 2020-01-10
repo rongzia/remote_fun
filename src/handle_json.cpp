@@ -61,8 +61,8 @@ namespace remote {
         writer.EndObject();
 
         std::string json(string_buffer.GetString());
-        // TODO:
-        std::cout << "to json string : " << json << std::endl;
+        // TODO: cout
+//        std::cout << "to json string : " << json << std::endl;
         return json;
     }
     //! TODO, some errors

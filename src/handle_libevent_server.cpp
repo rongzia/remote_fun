@@ -37,23 +37,16 @@ namespace remote {
             libeventHandle_->get_listen_connection_array(ListenArray());
 
             int readsize_1 = libeventHandle_->wait_recive(ListenArray()[0], buffer_);
-
             if (readsize_1 > 0) {
-                std::cout << "libevent recive success. read size " << readsize_1;
-                std::cout << ", read content : " << buffer_ << std::endl;
+//                std::cout << "libevent recive success. read size " << readsize_1;
+//                std::cout << ", read content : " << buffer_ << std::endl;
+
                 std::string json = std::string(buffer_, readsize_1);
                 std::string ret = ServerNetHandle::RemoteServerHandle()->SelectDoCall(json);
                 libeventHandle_->send(ListenArray()[0], ret.data(), ret.length());
-//                std::cout << "libevent send success. send size " << ret.length() << ", send content : " << ret.data() << std::endl;
-            }
 
-//            memset(buffer_, 0, sizeof(char) * 16384);
-//            int readsize_2 = libeventHandle_->wait_recive(ListenArray()[1], buffer_);
-//            if (readsize_2 > 0) {
-//                std::string json = std::string(buffer_, readsize_2);
-//                std::string ret = ServerNetHandle::RemoteServerHandle()->SelectDoCall(json);
-//                libeventHandle_->send(ListenArray()[1], ret.data(), ret.length());
-//            }
+                //                std::cout << "libevent send success. send size " << ret.length() << ", send content : " << ret.data() << std::endl;
+            }
 
 //            if(libeventHandle_->get_listen_connection_count() > 0) {
 //#ifdef MULTI_MASTER_ZHANG_LOG_REMOTE

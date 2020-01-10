@@ -23,7 +23,7 @@ if (NOT NO_DEBUG_REMOTE_SINGLE)
     find_library(ZLIB_LIBRARY libz.a /home/zhangrongrong/.local/zlib-1.2.11/lib NO_DEFAULT_PATH)
 endif ()
 
-add_definitions(-DMULTI_MASTER_ZHANG_LOG_FUN)
+#add_definitions(-DMULTI_MASTER_ZHANG_LOG_FUN)
 add_definitions(-DMULTI_MASTER_ZHANG_LOG_PATH)
 
 # for libevent
