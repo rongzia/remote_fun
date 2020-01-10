@@ -1,0 +1,12 @@
+[
+    {
+        "name":"host1",
+        "ip":"10.11.6.119",
+        "is_local":false
+    },
+    {
+        "name":"host2",
+        "ip":"10.11.6.120",
+        "is_local":true
+    }
+]

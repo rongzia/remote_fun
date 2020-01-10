@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package remote;
+
+service JsonCall {
+    rpc DoCall (JsonRequest) returns (JsonReply) {
+    }
+}
+
+message JsonRequest {
+    bytes json = 1;
+    string fun_name = 2;
+}
+
+message JsonReply {
+    bytes ret_string = 1;
+}
