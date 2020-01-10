@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.10)
+
 message("---------------------------- start MULTI_MASTER_ZHANG")
 message("building remote_fun")
 if (NOT NO_DEBUG_REMOTE_SINGLE)
