@@ -36,8 +36,8 @@ namespace remote {
         std::cout << "libevent send " << (ret ? "success." : "fail.") << " send size " << json.length() << std::endl;
 
         // recive
-        char buffer[1049600];
-        memset(buffer, 0, 1049600);
+        char buffer[10496000];
+        memset(buffer, 0, 10496000);
 //        std::cout << "recived buffer size : " << eventHandle_->get_recive_buffer_length(conn_id_) << std::endl;
         int buffer_len = eventHandle_->wait_recive(conn_id_, buffer);
 //        std::cout << "libevent recive success. recive size " << buffer_len << ", recive content : " << buffer << std::endl;

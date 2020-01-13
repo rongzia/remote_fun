@@ -33,7 +33,7 @@ namespace remote {
                 << "ServerLibeventHandle::RunServer().";
 
         while (1) {
-            memset(buffer_, 0, sizeof(char) * 1049600);
+            memset(buffer_, 0, sizeof(char) * 10496000);
             libeventHandle_->get_listen_connection_array(ListenArray());
 
             int readsize_1 = libeventHandle_->wait_recive(ListenArray()[0], buffer_);

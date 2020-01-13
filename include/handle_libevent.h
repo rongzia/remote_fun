@@ -33,7 +33,7 @@ namespace remote {
         LibeventHandle *libeventHandle_;
         int server_port_;
         int listen_array_[10];
-        char buffer_[1049600];
+        char buffer_[10496000];
 //        int buffer_size_ = 1049600;
     };
 
