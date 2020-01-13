@@ -32,12 +32,14 @@ namespace remote {
             std::cout << struct_ptr->buf << std::endl;
             struct_ptr->nbytes = nbytes;
             struct_ptr->offset = offset;
-            struct_map.insert(std::make_pair((int64_t) &struct_ptr->buf - (int64_t) struct_ptr
-                                             , std::string(struct_ptr->buf, nbytes)));
+            struct_map.insert(std::make_pair((int64_t) &struct_ptr->buf - (int64_t) struct_ptr,
+                                             std::string(struct_ptr->buf, nbytes)));
         }
         std::string json = JsonHandle::ToJson(kPwrite, struct_map, struct_ptr, sizeof(StructHandle::StructPwrite));
+        std::cout << "To JSON OK" << std::endl;
 //        StructHandle::PrintStructPwrite(struct_ptr);
         int size = RemoteType::StringToSSize(client_net_handle_->Send(json));
+        std::cout << "after send" << std::endl;
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "[path] remote_pwrite fd : " << fd << ", size : " << size;
@@ -56,8 +58,8 @@ namespace remote {
             struct_ptr->fd = fd;
             struct_ptr->buf = (char *) buf;
             struct_ptr->nbytes = nbytes;
-            struct_map.insert(std::make_pair((int64_t) &struct_ptr->buf - (int64_t) struct_ptr
-                                             , std::string(struct_ptr->buf, nbytes)));
+            struct_map.insert(std::make_pair((int64_t) &struct_ptr->buf - (int64_t) struct_ptr,
+                                             std::string(struct_ptr->buf, nbytes)));
         }
         std::string json = JsonHandle::ToJson(kWrite, struct_map, struct_ptr, sizeof(StructHandle::StructWrite));
         int size = RemoteType::StringToSSize(client_net_handle_->Send(json));
@@ -136,8 +138,8 @@ namespace remote {
         {
             struct_ptr->pathname = (char *) pathname;
             struct_ptr->flag = flag;
-            struct_map.insert(std::make_pair((int64_t) &struct_ptr->pathname - (int64_t) struct_ptr
-                                             , std::string(struct_ptr->pathname, strlen(struct_ptr->pathname))));
+            struct_map.insert(std::make_pair((int64_t) &struct_ptr->pathname - (int64_t) struct_ptr,
+                                             std::string(struct_ptr->pathname, strlen(struct_ptr->pathname))));
         }
         std::string json = JsonHandle::ToJson(kOpen1, struct_map, struct_ptr, sizeof(StructHandle::StructOpen));
         int fd = RemoteType::StringToInt(client_net_handle_->Send(json));
@@ -166,8 +168,8 @@ namespace remote {
             struct_ptr->pathname = (char *) pathname;
             struct_ptr->flag = flag;
             struct_ptr->mode = mode;
-            struct_map.insert(std::make_pair((int64_t) &struct_ptr->pathname - (int64_t) struct_ptr
-                                             , std::string(struct_ptr->pathname, strlen(struct_ptr->pathname))));
+            struct_map.insert(std::make_pair((int64_t) &struct_ptr->pathname - (int64_t) struct_ptr,
+                                             std::string(struct_ptr->pathname, strlen(struct_ptr->pathname))));
         }
         std::string json = JsonHandle::ToJson(kOpen2, struct_map, struct_ptr, sizeof(StructHandle::StructOpen));
         int fd = RemoteType::StringToInt(client_net_handle_->Send(json));
@@ -187,8 +189,8 @@ namespace remote {
         std::map<int, std::string> struct_map;
         {
             struct_ptr->pathname = (char *) pathname;
-            struct_map.insert(std::make_pair((int64_t) &struct_ptr->pathname - (int64_t) struct_ptr
-                                             , std::string(struct_ptr->pathname, strlen(struct_ptr->pathname))));
+            struct_map.insert(std::make_pair((int64_t) &struct_ptr->pathname - (int64_t) struct_ptr,
+                                             std::string(struct_ptr->pathname, strlen(struct_ptr->pathname))));
         }
 
         std::string json = JsonHandle::ToJson(kStat, struct_map, struct_ptr, sizeof(StructHandle::StructStat));
@@ -307,8 +309,8 @@ namespace remote {
             struct_ptr->len = len;
         }
 
-        std::string json = JsonHandle::ToJson(kFallocate, struct_map
-                                              , struct_ptr, sizeof(StructHandle::StructFallocate));
+        std::string json = JsonHandle::ToJson(kFallocate, struct_map, struct_ptr,
+                                              sizeof(StructHandle::StructFallocate));
         int ret = RemoteType::StringToInt(client_net_handle_->Send(json));
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
@@ -330,8 +332,8 @@ namespace remote {
             struct_ptr->buf = new char[1];
             struct_ptr->nbytes = nbytes;
             struct_ptr->offset = offset;
-            struct_map.insert(std::make_pair((int64_t) &struct_ptr->buf - (int64_t) struct_ptr
-                                             , std::string(struct_ptr->buf, nbytes)));
+            struct_map.insert(std::make_pair((int64_t) &struct_ptr->buf - (int64_t) struct_ptr,
+                                             std::string(struct_ptr->buf, nbytes)));
         }
 
         std::string json = JsonHandle::ToJson(kPread, struct_map, struct_ptr, sizeof(StructHandle::StructPread));
@@ -372,14 +374,14 @@ namespace remote {
         std::map<int, std::string> struct_map;
         {
             struct_ptr->name = (char *) name;
-            struct_map.insert(std::make_pair((int64_t) &struct_ptr->name - (int64_t) struct_ptr
-                                             , std::string(struct_ptr->name, strlen(struct_ptr->name))));
+            struct_map.insert(std::make_pair((int64_t) &struct_ptr->name - (int64_t) struct_ptr,
+                                             std::string(struct_ptr->name, strlen(struct_ptr->name))));
         }
         std::string json = JsonHandle::ToJson(kUnlink, struct_map, struct_ptr, sizeof(StructHandle::StructUnlink));
         int ret = RemoteType::StringToInt(client_net_handle_->Send(json));
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
-                << "[path] remote_unlink file : " << name  << ", ret : " << ret;
+                << "[path] remote_unlink file : " << name << ", ret : " << ret;
 #endif // MULTI_MASTER_ZHANG_LOG_PATH
         return ret;
     }
@@ -395,8 +397,8 @@ namespace remote {
             struct_ptr->fd = fd;
             struct_ptr->length = length;
         }
-        std::string json = JsonHandle::ToJson(kFtruncate, struct_map, struct_ptr
-                                              , sizeof(StructHandle::StructFtruncate));
+        std::string json = JsonHandle::ToJson(kFtruncate, struct_map, struct_ptr,
+                                              sizeof(StructHandle::StructFtruncate));
         int ret = RemoteType::StringToInt(client_net_handle_->Send(json));
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
@@ -415,10 +417,10 @@ namespace remote {
         {
             struct_ptr->__old = (char *) __old;
             struct_ptr->__new = (char *) __new;
-            struct_map.insert(std::make_pair((int64_t) &struct_ptr->__old - (int64_t) struct_ptr
-                                             , std::string((char *) struct_ptr->__old, strlen(struct_ptr->__old))));
-            struct_map.insert(std::make_pair((int64_t) &struct_ptr->__new - (int64_t) struct_ptr
-                                             , std::string((char *) struct_ptr->__new, strlen(struct_ptr->__new))));
+            struct_map.insert(std::make_pair((int64_t) &struct_ptr->__old - (int64_t) struct_ptr,
+                                             std::string((char *) struct_ptr->__old, strlen(struct_ptr->__old))));
+            struct_map.insert(std::make_pair((int64_t) &struct_ptr->__new - (int64_t) struct_ptr,
+                                             std::string((char *) struct_ptr->__new, strlen(struct_ptr->__new))));
         }
         std::string json = JsonHandle::ToJson(kRename, struct_map, struct_ptr, sizeof(StructHandle::StructRename));
         int ret = RemoteType::StringToInt(client_net_handle_->Send(json));
@@ -439,8 +441,8 @@ namespace remote {
         {
             struct_ptr->path = (char *) path;
             struct_ptr->mode = mode;
-            struct_map.insert(std::make_pair((int64_t) &struct_ptr->path - (int64_t) struct_ptr
-                                             , std::string((char *) struct_ptr->path, strlen(struct_ptr->path))));
+            struct_map.insert(std::make_pair((int64_t) &struct_ptr->path - (int64_t) struct_ptr,
+                                             std::string((char *) struct_ptr->path, strlen(struct_ptr->path))));
         }
         std::string json = JsonHandle::ToJson(kMkdir, struct_map, struct_ptr, sizeof(StructHandle::StructMkdir));
         int ret = RemoteType::StringToInt(client_net_handle_->Send(json));
@@ -460,8 +462,8 @@ namespace remote {
         std::map<int, std::string> struct_map;
         {
             struct_ptr->path = (char *) path;
-            struct_map.insert(std::make_pair((int64_t) &struct_ptr->path - (int64_t) struct_ptr
-                                             , std::string(struct_ptr->path, strlen(struct_ptr->path))));
+            struct_map.insert(std::make_pair((int64_t) &struct_ptr->path - (int64_t) struct_ptr,
+                                             std::string(struct_ptr->path, strlen(struct_ptr->path))));
         }
         std::string json = JsonHandle::ToJson(kRmdir, struct_map, struct_ptr, sizeof(StructHandle::StructRmdir));
         int ret = RemoteType::StringToInt(client_net_handle_->Send(json));
@@ -483,8 +485,8 @@ namespace remote {
         {
             struct_ptr->basedir = (char *) basedir.data();
             struct_ptr->recursive = recursive;
-            struct_map.insert(std::make_pair((int64_t) &struct_ptr->basedir - (int64_t) struct_ptr
-                                             , std::string(struct_ptr->basedir, strlen(struct_ptr->basedir))));
+            struct_map.insert(std::make_pair((int64_t) &struct_ptr->basedir - (int64_t) struct_ptr,
+                                             std::string(struct_ptr->basedir, strlen(struct_ptr->basedir))));
         }
         std::string json = JsonHandle::ToJson(kOpendir, struct_map, struct_ptr, sizeof(StructHandle::StructOpendir));
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
@@ -495,8 +497,8 @@ namespace remote {
     }
 
 
-    RemoteClient::RemoteClient(const std::string &connect_to_addr, const std::string &connect_to_port
-                               , const std::string &listen_port) {
+    RemoteClient::RemoteClient(const std::string &connect_to_addr, const std::string &connect_to_port,
+                               const std::string &listen_port) {
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "RemoteClient::RemoteClient()";
 

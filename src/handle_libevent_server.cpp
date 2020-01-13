@@ -38,14 +38,15 @@ namespace remote {
 
             int readsize_1 = libeventHandle_->wait_recive(ListenArray()[0], buffer_);
             if (readsize_1 > 0) {
-//                std::cout << "libevent recive success. read size " << readsize_1;
+                std::cout << "libevent recive success. read size " << readsize_1;
 //                std::cout << ", read content : " << buffer_ << std::endl;
 
                 std::string json = std::string(buffer_, readsize_1);
                 std::string ret = ServerNetHandle::RemoteServerHandle()->SelectDoCall(json);
                 libeventHandle_->send(ListenArray()[0], ret.data(), ret.length());
 
-                //                std::cout << "libevent send success. send size " << ret.length() << ", send content : " << ret.data() << std::endl;
+                std::cout << "libevent send success. send size " << ret.length();
+//                std::cout << ", send content : " << ret.data() << std::endl;
             }
 
 //            if(libeventHandle_->get_listen_connection_count() > 0) {
