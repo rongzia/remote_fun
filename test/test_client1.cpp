@@ -17,12 +17,12 @@ struct stat;
 
 void PrintVector(std::vector<remote::StructHandle::Entry> entry){
     for(auto iter : entry){
-        cout << "path : " << iter.m_path << ", depth : " << iter.m_depth << endl;
+        cout << "[remote fun] path : " << iter.m_path << ", depth : " << iter.m_depth << endl;
     }
 }
 
 int main(int argc, char *argv[]) {
-    std::cout << "client main" << std::endl;
+    std::cout << "[remote fun] client main" << std::endl;
 
     string dir = "/home/zhangrongrong/test_dir";
     string current_path = "./ibdata1";
@@ -42,7 +42,8 @@ int main(int argc, char *argv[]) {
         int fd;
         int ret;
         ssize_t size;
-        unsigned char buf[12];
+        int buffer_len = 65535;
+        unsigned char buf[buffer_len];
 
         {
             //! open2,打开或创建文件
@@ -58,30 +59,38 @@ int main(int argc, char *argv[]) {
             remote::StructHandle::PrintStructReturnStat(&stat1);
             cout << "stat ret : " << ret << endl << endl;
             assert(0 == ret);
-
-//            struct stat stat2;
-//            ret = stat(current_path.data(), &stat2);
-//            cout << "stat ret : " << ret << endl << endl;
-//            assert(0 > ret);
         }
         {
-            //! 写入 123456789
+            //! 写入 1
             cout << "--- TEST pwrite." << endl;
-            size = remote_client->remote_pwrite(fd, "123456789", 9, 0);
+            string str(buffer_len, '1');
+            size = remote_client->remote_pwrite(fd, str.data(), str.length(), 0);
             cout << "pwrite size : " << size << endl << endl;
-            assert(9 == size);
-            string str(1048576, '1');
-            size = remote_client->remote_pwrite(fd, str.data(), str.length(), 9);
+            assert(size == buffer_len);
         }
-//        {
-//            //! 从头读 9 个字节，应该为 123456789
-//            cout << "--- TEST pread." << endl;
-//            memset(buf, 0, 12);
-//            size = remote_client->remote_pread(fd, buf, 9, 0);
-//            cout << "pread size : " << size ;
+        {
+            //! 从头读
+            cout << "--- TEST pread." << endl;
+//            int read_len = buffer_len;
+            int read_len = 10;
+            memset(buf, 0, read_len);
+            size = remote_client->remote_pread(fd, buf, read_len, 0);
+            cout << "pread size : " << size << endl << endl;
 //            cout << ", read content : " << buf << endl << endl;
-//            assert(0 == strncmp("123456789", (const char *) buf, 9));
-//        }
+            string str(read_len, '1');
+            assert(0 == strncmp(str.data(), (const char *) buf, read_len));
+        }
+        {
+            //! 从头读
+            cout << "--- TEST pread." << endl;
+            int read_len = buffer_len;
+            memset(buf, 0, read_len);
+            size = remote_client->remote_pread(fd, buf, read_len, 0);
+            cout << "pread size : " << size << endl << endl;
+//            cout << ", read content : " << buf << endl << endl;
+            string str(read_len, '1');
+            assert(0 == strncmp(str.data(), (const char *) buf, read_len));
+        }
 //        {
 //            //! fsync
 //            cout << "--- TEST fsync." << endl;

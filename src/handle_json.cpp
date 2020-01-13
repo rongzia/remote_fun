@@ -62,7 +62,7 @@ namespace remote {
 
         std::string json(string_buffer.GetString());
         // TODO: cout
-//        std::cout << "to json string : " << json << std::endl;
+//        std::cout << "[remote fun] to json string : " << json << std::endl;
         return json;
     }
     //! TODO, some errors

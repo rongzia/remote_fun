@@ -330,8 +330,8 @@ namespace remote {
             struct_ptr->buf = new char[1];
             struct_ptr->nbytes = nbytes;
             struct_ptr->offset = offset;
-            struct_map.insert(std::make_pair((int64_t) &struct_ptr->buf - (int64_t) struct_ptr,
-                                             std::string(struct_ptr->buf, nbytes)));
+//            struct_map.insert(std::make_pair((int64_t) &struct_ptr->buf - (int64_t) struct_ptr,
+//                                             std::string(struct_ptr->buf, nbytes)));
         }
 
         std::string json = JsonHandle::ToJson(kPread, struct_map, struct_ptr, sizeof(StructHandle::StructPread));
@@ -351,15 +351,6 @@ namespace remote {
 #endif // MULTI_MASTER_ZHANG_LOG_PATH
             return return_struct_ptr->size;
         }
-//        {
-//            std::string return_json = client_net_handle_->Send(json);
-//            rapidjson::Document document;
-//            document.Parse(return_json.data());
-//            ssize_t size = document["size"].GetInt64();
-//            char *buffer = (char *) document["buffer"].GetString();
-//            memcpy(buf, buffer, nbytes);
-//            return size;
-//        }
     }
 
 

@@ -294,7 +294,7 @@ namespace remote {
             std::map<int, std::string> struct_map = JsonHandle::FromJson(
                     json, (void *) struct_ptr, sizeof(StructHandle::StructPread));
             auto iter = struct_map.begin();
-            struct_ptr->buf = new char[iter->second.length()];
+            struct_ptr->buf = new char[struct_ptr->nbytes];
         }
         ssize_t size = pread(struct_ptr->fd, struct_ptr->buf, struct_ptr->nbytes, struct_ptr->offset);
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
@@ -467,7 +467,7 @@ namespace remote {
 
     void PrintVector(std::vector<remote::StructHandle::Entry> entry) {
         for (auto iter : entry) {
-            std::cout << "path : " << iter.m_path << ", depth : " << iter.m_depth << std::endl;
+            std::cout << "[remote fun] path : " << iter.m_path << ", depth : " << iter.m_depth << std::endl;
         }
     }
 
@@ -504,7 +504,7 @@ namespace remote {
 #endif
         //! TODO 整理json
 #ifdef MULTI_MASTER_ZHANG_DEBUG_JSON
-        std::cout << "recive json string : " << json << std::endl;
+        std::cout << "[remote fun] recive json string : " << json << std::endl;
 #endif // MULTI_MASTER_ZHANG_DEBUG_JSON
         std::string fun_name = JsonHandle::FunctionNameFromJson(json);
         std::string ret;
@@ -563,15 +563,15 @@ namespace remote {
         char path[512];
 
         char *p = getcwd(path, 512);
-        std::cout << "getcwd : " << path << std::endl;
+        std::cout << "[remote fun] getcwd : " << path << std::endl;
 
 //        getcurdir( 0, char *directory);
 
         int ret = chdir("/home/zhangrongrong/mysql/data");
-        std::cout << "current path ret : " << ret << std::endl;
+        std::cout << "[remote fun] current path ret : " << ret << std::endl;
 
         p = getcwd(path, 512);
-        std::cout << "getcwd : " << path << std::endl;
+        std::cout << "[remote fun] getcwd : " << path << std::endl;
     }
 
     RemoteServer::~RemoteServer() {

@@ -27,7 +27,7 @@ namespace remote {
         std::cout << "ServerGprcHandle::DoCall()." << std::endl;
 #endif // MULTI_MASTER_ZHANG_DEBUG_FUN
 #ifdef MULTI_MASTER_ZHANG_DEBUG_JSON
-        std::cout << "recive json : " << request->json() << std::endl;
+        std::cout << "[remote fun] recive json : " << request->json() << std::endl;
 #endif // MULTI_MASTER_ZHANG_DEBUG_JSON
         std::string json = request->json();
 

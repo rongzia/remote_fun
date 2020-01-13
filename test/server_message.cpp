@@ -5,7 +5,7 @@ using namespace std;
 
 void server_recive_cb(EventMessageHandle *mess_handle, EventMessage *mess, void *arg) {
     EventMessage return_message;
-    cout << "revice : " << std::string(mess->message, mess->message_size) << endl;
+    cout << "[remote fun] revice : " << std::string(mess->message, mess->message_size) << endl;
     return_message.prepare_send("remote_fun", "return", mess->send_host_name
                                 , "yes", 3);
     int return_code = mess_handle->sendMessage(&return_message);

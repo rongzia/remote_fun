@@ -20,9 +20,9 @@ namespace remote {
 
         server_port_ = 50051;
         if (!libeventHandle_->init_handle(server_port_)) {
-            std::cout << "init error" << std::endl;
+            std::cout << "[remote fun] init error" << std::endl;
         }
-        std::cout << "server listen on port : " << server_port_ << std::endl;
+        std::cout << "[remote fun] server listen on port : " << server_port_ << std::endl;
 
         //! return 0, represent success.
         return 0;
@@ -38,15 +38,13 @@ namespace remote {
 
             int readsize_1 = libeventHandle_->wait_recive(ListenArray()[0], buffer_);
             if (readsize_1 > 0) {
-                std::cout << "libevent recive success. read size " << readsize_1;
-//                std::cout << ", read content : " << buffer_ << std::endl;
-
+                std::cout << "[remote fun] libevent recive success. read size " << readsize_1 << std::endl;
+                // std::cout << "[remote fun] read content : " << buffer_ << std::endl;
                 std::string json = std::string(buffer_, readsize_1);
                 std::string ret = ServerNetHandle::RemoteServerHandle()->SelectDoCall(json);
                 libeventHandle_->send(ListenArray()[0], ret.data(), ret.length());
-
-                std::cout << "libevent send success. send size " << ret.length();
-//                std::cout << ", send content : " << ret.data() << std::endl;
+                std::cout << "[remote fun] libevent send success. send size:" << ret.length();
+                // std::cout << "[remote fun] send content : " << ret.data() << std::endl;
             }
 
 //            if(libeventHandle_->get_listen_connection_count() > 0) {

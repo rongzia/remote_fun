@@ -18,10 +18,10 @@ namespace remote {
         eventHandle_ = new LibeventHandle();
 
         if (!eventHandle_->init_handle(listen_port_)) {
-            std::cout << "init error" << std::endl;
+            std::cout << "[remote fun] init error" << std::endl;
         }
         conn_id_ = eventHandle_->get_connection_id(connect_to_addr_.data(), connect_to_port_, true);
-        std::cout << "connect to : " << connect_to_addr_ << ":" << connect_to_port_
+        std::cout << "[remote fun] connect to : " << connect_to_addr_ << ":" << connect_to_port_
         << ", conn_id : " << conn_id_ << ", listen port : " << listen_port_ << std::endl;
         //! return 0, represent success.
         return 0;
@@ -30,13 +30,13 @@ namespace remote {
     std::string ClientLibEventHandle::Send(const std::string &json) {
         bool ret = eventHandle_->send(conn_id_, json.data(), json.length());
         // TODO
-//        std::cout << "libevent send " << (ret ? "success." : "fail.") << " send size " << json.length() << std::endl;
+//        std::cout << "[remote fun] libevent send " << (ret ? "success." : "fail.") << " send size " << json.length() << std::endl;
 
         // recive
         memset(buffer_, 0, sizeof(char) * 10496000);
-//        std::cout << "recived buffer size : " << eventHandle_->get_recive_buffer_length(conn_id_) << std::endl;
+//        std::cout << "[remote fun] recived buffer size : " << eventHandle_->get_recive_buffer_length(conn_id_) << std::endl;
         int buffer_len = eventHandle_->wait_recive(conn_id_, buffer_);
-//        std::cout << "libevent recive success. recive size " << buffer_len << ", recive content : " << buffer_ << std::endl;
+//        std::cout << "[remote fun] libevent recive success. recive size " << buffer_len << ", recive content : " << buffer_ << std::endl;
         return std::string(buffer_, buffer_len);
     }
 }
