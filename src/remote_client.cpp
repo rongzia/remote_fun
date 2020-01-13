@@ -177,7 +177,7 @@ namespace remote {
         return fd;
     }
 
-    int RemoteClient::remote_stat(const char *pathname, struct stat *buf) const {
+    int RemoteClient::remote_stat(const char *pathname, struct stat *buf, int *remote_errno) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "[fun ] RemoteClient::remote_stat()";
@@ -197,6 +197,7 @@ namespace remote {
             auto *return_struct_ptr = new StructHandle::StructReturnStat();
             JsonHandle::FromJson(return_json, return_struct_ptr, sizeof(StructHandle::StructReturnStat));
             *buf = return_struct_ptr->stat1;
+            *remote_errno = return_struct_ptr->return_remote_errno;
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
             EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                     << "[path] remote_stat file : " << pathname << ", ret : " << return_struct_ptr->ret;

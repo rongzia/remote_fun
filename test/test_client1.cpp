@@ -53,7 +53,8 @@ int main(int argc, char *argv[]) {
         {
             cout << "--- TEST stat." << endl;
             struct stat stat1;
-            ret = remote_client->remote_stat(current_path.data(), &stat1);
+            int remote_errno;
+            ret = remote_client->remote_stat(current_path.data(), &stat1, &remote_errno);
             remote::StructHandle::PrintStructReturnStat(&stat1);
             cout << "stat ret : " << ret << endl << endl;
             assert(0 == ret);

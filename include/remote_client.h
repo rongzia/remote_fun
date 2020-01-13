@@ -45,7 +45,7 @@ namespace remote {
 
         /*friend*/ int remote_open(const char *pathname, int flag, mode_t mode) const;
 
-        /*friend*/ int remote_stat(const char *pathname, struct stat *buf) const;
+        /*friend*/ int remote_stat(const char *pathname, struct stat *buf, int *remote_errno) const;
 
         /*friend*/ int remote_close(int fd) const;
 

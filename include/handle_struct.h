@@ -50,6 +50,7 @@ namespace remote {
         struct StructReturnStat {
             int ret;
             struct stat stat1;
+            int return_remote_errno;
         };
         struct StructClose {
             int fd;

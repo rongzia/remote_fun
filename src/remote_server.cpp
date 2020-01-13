@@ -168,9 +168,7 @@ namespace remote {
         // TODO 库函数
         int ret = 0;
         ret = stat(struct_ptr->pathname, &(struct_ptr->stat1));
-        if(ret < 0){
-            ret = errno;
-        }
+
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
                 << "[path] DoStat file : " << struct_ptr->pathname << ", ret : " << ret
@@ -180,6 +178,7 @@ namespace remote {
             auto *return_struct_ptr = new StructHandle::StructHandle::StructReturnStat();
             return_struct_ptr->ret = ret;
             return_struct_ptr->stat1 = struct_ptr->stat1;
+            return_struct_ptr->return_remote_errno = errno;
             std::map<int, std::string> struct_map;
             std::string return_json = JsonHandle::ToJson(kReturnStat, struct_map, return_struct_ptr
                                                          , sizeof(StructHandle::StructReturnStat));
