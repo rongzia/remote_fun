@@ -11,9 +11,6 @@ namespace remote {
             : connect_to_addr_(connect_to_addr)
               , connect_to_port_(std::stoi(connect_to_port))
               , listen_port_(std::stoi(listen_port)){
-#ifdef MULTI_MASTER_ZHANG_DEBUG_FUN
-      std::cout << "ClientLibEventHandle::ClientLibEventHandle()." << std::endl;
-#endif // MULTI_MASTER_ZHANG_DEBUG_FUN
         Init();
     }
 

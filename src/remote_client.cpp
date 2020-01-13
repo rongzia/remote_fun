@@ -29,17 +29,13 @@ namespace remote {
             struct_ptr->fd = fd;
             struct_ptr->buf = (char *) buf;
 //            struct_ptr->buf = new char[1];
-            std::cout << struct_ptr->buf << std::endl;
             struct_ptr->nbytes = nbytes;
             struct_ptr->offset = offset;
             struct_map.insert(std::make_pair((int64_t) &struct_ptr->buf - (int64_t) struct_ptr,
                                              std::string(struct_ptr->buf, nbytes)));
         }
         std::string json = JsonHandle::ToJson(kPwrite, struct_map, struct_ptr, sizeof(StructHandle::StructPwrite));
-        std::cout << "To JSON OK" << std::endl;
-//        StructHandle::PrintStructPwrite(struct_ptr);
         int size = RemoteType::StringToSSize(client_net_handle_->Send(json));
-        std::cout << "after send" << std::endl;
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "[path] remote_pwrite fd : " << fd << ", size : " << size;
@@ -158,7 +154,6 @@ namespace remote {
 //#endif  // MULTI_MASTER_ZHANG_LOG_PATH
 //        return -2;
 //      }
-std::cout << "RemoteClient::remote_open" << std::endl;
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "[fun ] RemoteClient::remote_open2()";
@@ -174,7 +169,6 @@ std::cout << "RemoteClient::remote_open" << std::endl;
         }
         std::string json = JsonHandle::ToJson(kOpen2, struct_map, struct_ptr, sizeof(StructHandle::StructOpen));
 
-std::cout << "client_net_handle_" << client_net_handle_ << std::endl;
         int fd = RemoteType::StringToInt(client_net_handle_->Send(json));
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()

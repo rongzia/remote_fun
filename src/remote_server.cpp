@@ -32,9 +32,7 @@ namespace remote {
             struct_ptr->buf = new char[iter->second.length()];
             memcpy(struct_ptr->buf, iter->second.data(), iter->second.length());
         }
-        std::cout << "before pwrite" << std::endl;
         ssize_t size = pwrite(struct_ptr->fd, struct_ptr->buf, struct_ptr->nbytes, struct_ptr->offset);
-        std::cout << "after pwrite" << std::endl;
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         char path_buf[1024];
         GetPathByFd(struct_ptr->fd, path_buf);
