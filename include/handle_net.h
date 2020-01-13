@@ -38,7 +38,7 @@ namespace remote {
 
         ClientNetHandle &operator=(const ClientNetHandle &) = delete;
 
-        virtual std::string Send(const std::string &) const = 0;
+        virtual std::string Send(const std::string &) = 0;
 
     protected:
         ClientNetHandle() = default;

@@ -30,18 +30,16 @@ namespace remote {
         return 0;
     }
 
-    std::string ClientLibEventHandle::Send(const std::string &json) const {
-        std::cout << "ClientLibEventHandle::Send"<< std::endl;
+    std::string ClientLibEventHandle::Send(const std::string &json) {
         bool ret = eventHandle_->send(conn_id_, json.data(), json.length());
         // TODO
-        std::cout << "libevent send " << (ret ? "success." : "fail.") << " send size " << json.length() << std::endl;
+//        std::cout << "libevent send " << (ret ? "success." : "fail.") << " send size " << json.length() << std::endl;
 
         // recive
-        char buffer[10496000];
-        memset(buffer, 0, 10496000);
+        memset(buffer_, 0, sizeof(char) * 10496000);
 //        std::cout << "recived buffer size : " << eventHandle_->get_recive_buffer_length(conn_id_) << std::endl;
-        int buffer_len = eventHandle_->wait_recive(conn_id_, buffer);
-//        std::cout << "libevent recive success. recive size " << buffer_len << ", recive content : " << buffer << std::endl;
-        return std::string(buffer, buffer_len);
+        int buffer_len = eventHandle_->wait_recive(conn_id_, buffer_);
+//        std::cout << "libevent recive success. recive size " << buffer_len << ", recive content : " << buffer_ << std::endl;
+        return std::string(buffer_, buffer_len);
     }
 }

@@ -34,13 +34,12 @@ namespace remote {
         int server_port_;
         int listen_array_[10];
         char buffer_[10496000];
-//        int buffer_size_ = 1049600;
     };
 
     class ClientLibEventHandle : public ClientNetHandle {
     public:
 
-        std::string Send(const std::string &json) const override;
+        std::string Send(const std::string &json) override;
 
         int Init();
 
@@ -51,12 +50,13 @@ namespace remote {
         ClientLibEventHandle &operator=(const ClientLibEventHandle &) = delete;
 
     private:
-        LibeventHandle *eventHandle_;
-        int conn_id_;
-
         const std::string connect_to_addr_;
         const int connect_to_port_;
         int listen_port_;
+
+        LibeventHandle *eventHandle_;
+        int conn_id_;
+        char buffer_[10496000];
     };
 }
 
