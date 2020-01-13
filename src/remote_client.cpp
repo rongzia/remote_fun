@@ -158,6 +158,7 @@ namespace remote {
 //#endif  // MULTI_MASTER_ZHANG_LOG_PATH
 //        return -2;
 //      }
+std::cout << "RemoteClient::remote_open" << std::endl;
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "[fun ] RemoteClient::remote_open2()";
@@ -172,6 +173,8 @@ namespace remote {
                                              std::string(struct_ptr->pathname, strlen(struct_ptr->pathname))));
         }
         std::string json = JsonHandle::ToJson(kOpen2, struct_map, struct_ptr, sizeof(StructHandle::StructOpen));
+
+std::cout << "client_net_handle_" << client_net_handle_ << std::endl;
         int fd = RemoteType::StringToInt(client_net_handle_->Send(json));
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
@@ -502,7 +505,7 @@ namespace remote {
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "RemoteClient::RemoteClient()";
 
-#ifdef REMOTE_FUN_WITH_LIBEENT
+#ifdef REMOTE_FUN_WITH_LIBEVENT
         client_net_handle_ = new ClientLibEventHandle(connect_to_addr, connect_to_port, listen_port);
 #endif
 #ifdef REMOTE_FUN_WITH_GRPC

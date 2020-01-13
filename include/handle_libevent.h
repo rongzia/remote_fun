@@ -3,7 +3,7 @@
 //
 #ifndef MULTI_MASTER_HANDLE_LIBEVENT_H
 #define MULTI_MASTER_HANDLE_LIBEVENT_H
-#ifdef REMOTE_FUN_WITH_LIBEENT
+#ifdef REMOTE_FUN_WITH_LIBEVENT
 
 #include "handle_net.h"
 
@@ -60,5 +60,5 @@ namespace remote {
     };
 }
 
-#endif // REMOTE_FUN_WITH_LIBEENT
+#endif // REMOTE_FUN_WITH_LIBEVENT
 #endif // MULTI_MASTER_HANDLE_LIBEVENT_H

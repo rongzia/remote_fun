@@ -31,6 +31,7 @@ namespace remote {
     }
 
     std::string ClientLibEventHandle::Send(const std::string &json) const {
+        std::cout << "ClientLibEventHandle::Send"<< std::endl;
         bool ret = eventHandle_->send(conn_id_, json.data(), json.length());
         // TODO
         std::cout << "libevent send " << (ret ? "success." : "fail.") << " send size " << json.length() << std::endl;

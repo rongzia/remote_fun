@@ -557,9 +557,9 @@ namespace remote {
         //! TODO 整理格式
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
                 << "RemoteServer::RemoteServer().";
-#ifdef REMOTE_FUN_WITH_LIBEENT
+#ifdef REMOTE_FUN_WITH_LIBEVENT
         server_net_handle_ = new ServerLibeventHandle(this);
-#endif // REMOTE_FUN_WITH_LIBEENT
+#endif // REMOTE_FUN_WITH_LIBEVENT
 #ifdef REMOTE_FUN_WITH_GRPC
         server_net_handle_ = new ServerGprcHandle(this);
 #endif // REMOTE_FUN_WITH_GRPC

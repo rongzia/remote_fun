@@ -27,10 +27,10 @@ add_definitions(-DMULTI_MASTER_ZHANG_LOG_FUN)
 add_definitions(-DMULTI_MASTER_ZHANG_LOG_PATH)
 
 # for libevent
-set(REMOTE_FUN_WITH_LIBEENT "1")
-if (REMOTE_FUN_WITH_LIBEENT STREQUAL "1")
+set(REMOTE_FUN_WITH_LIBEVENT "1")
+if (REMOTE_FUN_WITH_LIBEVENT STREQUAL "1")
     message("use libevent")
-    add_definitions(-DREMOTE_FUN_WITH_LIBEENT)
+    add_definitions(-DREMOTE_FUN_WITH_LIBEVENT)
 
     include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../../../multi-master-tool/multi_net_io/include/)   # for libevent_handle.h
 #    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../extra/libevent.bak/include) # for libevent
