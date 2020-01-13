@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
             size = remote_client->remote_pwrite(fd, "123456789", 9, 0);
             cout << "pwrite size : " << size << endl << endl;
             assert(9 == size);
-            string str(16384, '1');
+            string str(1048576, '1');
             size = remote_client->remote_pwrite(fd, str.data(), str.length(), 9);
         }
 //        {

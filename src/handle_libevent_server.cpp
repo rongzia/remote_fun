@@ -30,7 +30,7 @@ namespace remote {
 
     void ServerLibeventHandle::RunServer() {
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
-                << "RemoteServer::RunServer().";
+                << "ServerLibeventHandle::RunServer().";
 
         while (1) {
             memset(buffer_, 0, sizeof(char) * 1049600);
