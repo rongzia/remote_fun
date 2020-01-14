@@ -12,7 +12,7 @@ namespace remote {
 #endif // MULTI_MASTER_ZHANG_DEBUG_FUN
     }
 
-    std::string ClientGrpcHandle::Send(const std::string &json) const {
+    std::string ClientGrpcHandle::Send(const std::string &json) {
 #ifdef MULTI_MASTER_ZHANG_DEBUG_FUN
         std::cout << "ClientGrpcHandle::send()." << std::endl;
 #endif // MULTI_MASTER_ZHANG_DEBUG_FUN

@@ -31,7 +31,7 @@ namespace remote {
 
     class ClientGrpcHandle : public ClientNetHandle {
     public:
-        std::string Send(const std::string &) const override;
+        std::string Send(const std::string &) override;
 
         explicit ClientGrpcHandle(const std::string &connect_to_addr, const std::string &connect_to_port);
 

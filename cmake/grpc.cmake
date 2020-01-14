@@ -25,7 +25,6 @@ set(GRPC_STATIC_LIBRARY
         ${gRPC_GRPCPP_CHANNELZ_LIBRARY}
         ${gRPC_GRPC_CRONET_LIBRARY}
         ${gRPC_GRPC_UNSECURE_LIBRARY}
-        ${zlib}
         )
 
 find_library(gRPC_GRPCPP_UNSECURE_LIBRARY_SHARED grpcpp_unsecure ${GRPC_ROOT}/lib NO_DEFAULT_PATH)
