@@ -82,8 +82,8 @@ if (REMOTE_FUN_WITH_GRPC STREQUAL "1")
             src/handle_json.cpp src/handle_struct.cpp src/remote_type.cpp
             src/handle_net.cpp src/handle_grpc_client.cpp src/handle_grpc_server.cpp
             proto/json.grpc.pb.cc proto/json.pb.cc)
-    add_library(remote_fun STATIC ${REMOTE_SRCS})
-    target_link_libraries(remote_fun ${PROTOBUF_LIBRARY} ${GRPC_STATIC_LIBRARY} ${ZLIB_LIBRARY} pthread)
+    add_library(remote_fun ${REMOTE_SRCS})
+    target_link_libraries(remote_fun ${GRPC_STATIC_LIBRARY} ${PROTOBUF_LIBRARY} ${ZLIB_LIBRARY} pthread)
 
     add_executable(test_server test/test_server.cpp)
     add_executable(test_client1 test/test_client1.cpp)
