@@ -37,8 +37,8 @@ namespace remote {
         char path_buf[1024];
         GetPathByFd(struct_ptr->fd, path_buf);
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
-                << "[path] DoPwrite file : " << path_buf << ", fd : " << struct_ptr->fd << ", size : "
-                << struct_ptr->nbytes;
+                << "DoPwrite file:" << path_buf << ", fd:" << struct_ptr->fd << ", size:"
+                << struct_ptr->nbytes << ", offset:" << struct_ptr->offset;
 #endif // MULTI_MASTER_ZHANG_LOG_PATH
         return std::to_string(size);
     }
@@ -100,7 +100,7 @@ namespace remote {
         char path_buf[1024];
         GetPathByFd(struct_ptr->fd, path_buf);
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
-                << "[path] DoLseek file : " << path_buf << ", fd : " << struct_ptr->fd << ", offset : " << offset;
+                << "DoLseek file:" << path_buf << ", fd : " << struct_ptr->fd << ", offset:" << offset;
 #endif // MULTI_MASTER_ZHANG_LOG_PATH
         return std::to_string(offset);
     }
@@ -278,7 +278,8 @@ namespace remote {
         char path_buf[1024];
         GetPathByFd(struct_ptr->fd, path_buf);
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
-                << "[path] DoFallocate file : " << path_buf << ", fd : " << struct_ptr->fd << ", ret : " << ret;
+                << "DoFallocate file:" << path_buf << ", fd:" << struct_ptr->fd
+                << ", offset:" << struct_ptr->offset << ", len:" << struct_ptr->len  << ", ret:" << ret;
 #endif // MULTI_MASTER_ZHANG_LOG_PATH
         return std::to_string(ret);
     }
@@ -301,7 +302,8 @@ namespace remote {
         char path_buf[1024];
         GetPathByFd(struct_ptr->fd, path_buf);
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
-                << "[path] DoPread file : " << path_buf << ", fd : " << struct_ptr->fd << ", size : " << size;
+                << "[path] DoPread file : " << path_buf << ", fd : " << struct_ptr->fd
+                << ", size : " << size << ", offset:" << struct_ptr->offset;
 #endif // MULTI_MASTER_ZHANG_LOG_PATH
         {
             auto *return_struct_ptr = new StructHandle::StructReturnPread();

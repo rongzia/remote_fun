@@ -35,12 +35,12 @@ namespace remote {
                                              std::string(struct_ptr->buf, nbytes)));
         }
         std::string json = JsonHandle::ToJson(kPwrite, struct_map, struct_ptr, sizeof(StructHandle::StructPwrite));
-        mtx.lock();
+        //mtx.lock();
         int size = RemoteType::StringToSSize(client_net_handle_->Send(json));
-        mtx.unlock();
+        //mtx.unlock();
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
-                << "[path] remote_pwrite fd : " << fd << ", size : " << size;
+                << "remote_pwrite fd:" << fd << ", size:" << size << ", offset:" << offset;
 #endif // MULTI_MASTER_ZHANG_LOG_PATH
         return size;
     }
@@ -60,9 +60,9 @@ namespace remote {
                                              std::string(struct_ptr->buf, nbytes)));
         }
         std::string json = JsonHandle::ToJson(kWrite, struct_map, struct_ptr, sizeof(StructHandle::StructWrite));
-        mtx.lock();
+        //mtx.lock();
         int size = RemoteType::StringToSSize(client_net_handle_->Send(json));
-        mtx.unlock();
+        //mtx.unlock();
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "[path] remote_write fd : " << fd << ", size : " << size;
@@ -81,9 +81,9 @@ namespace remote {
         { struct_ptr->fd = fd; }
 
         std::string json = JsonHandle::ToJson(kFsync, struct_map, struct_ptr, sizeof(StructHandle::StructFsync));
-        mtx.lock();
+        //mtx.lock();
         int ret = RemoteType::StringToSSize(client_net_handle_->Send(json));
-        mtx.unlock();
+        //mtx.unlock();
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "[path] remote_fsync fd : " << fd << ", ret : " << ret;
@@ -104,12 +104,12 @@ namespace remote {
             struct_ptr->whence = whence;
         }
         std::string json = JsonHandle::ToJson(kLseek, struct_map, struct_ptr, sizeof(StructHandle::StructLseek));
-        mtx.lock();
+        //mtx.lock();
         int return_offset = RemoteType::StringToSSize(client_net_handle_->Send(json));
-        mtx.unlock();
+        //mtx.unlock();
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
-                << "[path] remote_lseek fd : " << fd << ", off : " << return_offset;
+                << "remote_lseek fd:" << fd << ", off:" << return_offset;
 #endif // MULTI_MASTER_ZHANG_LOG_PATH
         return return_offset;
     }
@@ -146,9 +146,9 @@ namespace remote {
                                              std::string(struct_ptr->pathname, strlen(struct_ptr->pathname))));
         }
         std::string json = JsonHandle::ToJson(kOpen1, struct_map, struct_ptr, sizeof(StructHandle::StructOpen));
-        mtx.lock();
+        //mtx.lock();
         int fd = RemoteType::StringToInt(client_net_handle_->Send(json));
-        mtx.unlock();
+        //mtx.unlock();
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "[path] remote_open1 file : " << pathname << ", fd : " << fd;
@@ -178,9 +178,9 @@ namespace remote {
                                              std::string(struct_ptr->pathname, strlen(struct_ptr->pathname))));
         }
         std::string json = JsonHandle::ToJson(kOpen2, struct_map, struct_ptr, sizeof(StructHandle::StructOpen));
-        mtx.lock();
+        //mtx.lock();
         int fd = RemoteType::StringToInt(client_net_handle_->Send(json));
-        mtx.unlock();
+        //mtx.unlock();
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "[path] remote_open2 file : " << pathname << ", fd : " << fd;
@@ -202,9 +202,9 @@ namespace remote {
         }
 
         std::string json = JsonHandle::ToJson(kStat, struct_map, struct_ptr, sizeof(StructHandle::StructStat));
-        mtx.lock();
+        //mtx.lock();
         std::string return_json = client_net_handle_->Send(json);
-        mtx.unlock();
+        //mtx.unlock();
         {
             auto *return_struct_ptr = new StructHandle::StructReturnStat();
             JsonHandle::FromJson(return_json, return_struct_ptr, sizeof(StructHandle::StructReturnStat));
@@ -228,9 +228,9 @@ namespace remote {
         struct_ptr->fd = fd;
 
         std::string json = JsonHandle::ToJson(kClose, struct_map, struct_ptr, sizeof(StructHandle::StructClose));
-        mtx.lock();
+        //mtx.lock();
         int ret = RemoteType::StringToInt(client_net_handle_->Send(json));
-        mtx.unlock();
+        //mtx.unlock();
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "[path] remote_close fd : " << fd << ", ret : " << ret;
@@ -250,9 +250,9 @@ namespace remote {
             struct_ptr->cmd = cmd;
         }
         std::string json = JsonHandle::ToJson(kFcntl1, struct_map, struct_ptr, sizeof(StructHandle::StructFcntl));
-        mtx.lock();
+        //mtx.lock();
         int ret = RemoteType::StringToInt(client_net_handle_->Send(json));
-        mtx.unlock();
+        //mtx.unlock();
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "[path] remote_fcntl1 fd : " << fd << ", ret : " << ret;
@@ -274,9 +274,9 @@ namespace remote {
         }
 
         std::string json = JsonHandle::ToJson(kFcntl2, struct_map, struct_ptr, sizeof(StructHandle::StructFcntl));
-        mtx.lock();
+        //mtx.lock();
         int ret = RemoteType::StringToInt(client_net_handle_->Send(json));
-        mtx.unlock();
+        //mtx.unlock();
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "[path] remote_fcntl2 fd : " << fd << ", ret : " << ret;
@@ -302,9 +302,9 @@ namespace remote {
         }
 
         std::string json = JsonHandle::ToJson(kFcntl3, struct_map, struct_ptr, sizeof(StructHandle::StructFcntl));
-        mtx.lock();
+        //mtx.lock();
         int ret = RemoteType::StringToInt(client_net_handle_->Send(json));
-        mtx.unlock();
+        //mtx.unlock();
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "[path] remote_fcntl3 fd : " << fd << ", ret : " << ret;
@@ -328,12 +328,12 @@ namespace remote {
 
         std::string json = JsonHandle::ToJson(kFallocate, struct_map, struct_ptr,
                                               sizeof(StructHandle::StructFallocate));
-        mtx.lock();
+        //mtx.lock();
         int ret = RemoteType::StringToInt(client_net_handle_->Send(json));
-        mtx.unlock();
+        //mtx.unlock();
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
-                << "[path] remote_fallocate fd : " << fd << ", ret : " << ret;
+                << "remote_fallocate fd:" << fd << ", offset:" << offset << ", len:" << len << ", ret : " << ret;
 #endif // MULTI_MASTER_ZHANG_LOG_PATH
         return ret;
     }
@@ -356,9 +356,9 @@ namespace remote {
         }
 
         std::string json = JsonHandle::ToJson(kPread, struct_map, struct_ptr, sizeof(StructHandle::StructPread));
-        mtx.lock();
+        //mtx.lock();
         std::string return_json = client_net_handle_->Send(json);
-        mtx.unlock();
+        //mtx.unlock();
         {
             auto *return_struct_ptr = new StructHandle::StructReturnPread();
             std::map<int, std::string> return_struct_map = JsonHandle::FromJson(
@@ -369,7 +369,7 @@ namespace remote {
             memcpy(buf, iter->second.data(), iter->second.length());
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
             EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
-                    << "[path] remote_pread fd : " << fd << ", size : " << return_struct_ptr->size;
+                    << "remote_pread fd:" << fd << ", size:" << return_struct_ptr->size << "offset:" << offset;
 #endif // MULTI_MASTER_ZHANG_LOG_PATH
             return return_struct_ptr->size;
         }
@@ -389,9 +389,9 @@ namespace remote {
                                              std::string(struct_ptr->name, strlen(struct_ptr->name))));
         }
         std::string json = JsonHandle::ToJson(kUnlink, struct_map, struct_ptr, sizeof(StructHandle::StructUnlink));
-        mtx.lock();
+        //mtx.lock();
         int ret = RemoteType::StringToInt(client_net_handle_->Send(json));
-        mtx.unlock();
+        //mtx.unlock();
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "[path] remote_unlink file : " << name << ", ret : " << ret;
@@ -412,9 +412,9 @@ namespace remote {
         }
         std::string json = JsonHandle::ToJson(kFtruncate, struct_map, struct_ptr,
                                               sizeof(StructHandle::StructFtruncate));
-        mtx.lock();
+        //mtx.lock();
         int ret = RemoteType::StringToInt(client_net_handle_->Send(json));
-        mtx.unlock();
+        //mtx.unlock();
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "[path] remote_ftruncate fd : " << fd << ", ret: " << ret;
@@ -438,9 +438,9 @@ namespace remote {
                                              std::string((char *) struct_ptr->__new, strlen(struct_ptr->__new))));
         }
         std::string json = JsonHandle::ToJson(kRename, struct_map, struct_ptr, sizeof(StructHandle::StructRename));
-        mtx.lock();
+        //mtx.lock();
         int ret = RemoteType::StringToInt(client_net_handle_->Send(json));
-        mtx.unlock();
+        //mtx.unlock();
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "[path] remote_rename : " << __old << " to " << __new << ", ret : " << ret;
@@ -462,9 +462,9 @@ namespace remote {
                                              std::string((char *) struct_ptr->path, strlen(struct_ptr->path))));
         }
         std::string json = JsonHandle::ToJson(kMkdir, struct_map, struct_ptr, sizeof(StructHandle::StructMkdir));
-        mtx.lock();
+        //mtx.lock();
         int ret = RemoteType::StringToInt(client_net_handle_->Send(json));
-        mtx.unlock();
+        //mtx.unlock();
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "[path] remote_mkdir : " << path << ", ret : " << ret;
@@ -485,9 +485,9 @@ namespace remote {
                                              std::string(struct_ptr->path, strlen(struct_ptr->path))));
         }
         std::string json = JsonHandle::ToJson(kRmdir, struct_map, struct_ptr, sizeof(StructHandle::StructRmdir));
-        mtx.lock();
+        //mtx.lock();
         int ret = RemoteType::StringToInt(client_net_handle_->Send(json));
-        mtx.unlock();
+        //mtx.unlock();
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "[path] remote_rmdir : " << path << ", ret : " << ret;
@@ -514,9 +514,9 @@ namespace remote {
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_CLIENT", EasyLogger::info).force_flush()
                 << "[path] remote_opendir dir : " << basedir;
 #endif // MULTI_MASTER_ZHANG_LOG_PATH
-        mtx.lock();
+        //mtx.lock();
         std::vector<StructHandle::Entry> v = JsonHandle::DirVectorFromJson(client_net_handle_->Send(json));
-        mtx.unlock();
+        //mtx.unlock();
         return v;
     }
 
