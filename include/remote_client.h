@@ -5,6 +5,7 @@
 #ifndef MULTI_MASTER_REMOTE_CLIENT_H
 #define MULTI_MASTER_REMOTE_CLIENT_H
 
+#define _FILE_OFFSET_BITS 64
 #include "remote_type.h"
 #include <vector>
 #include <thread>

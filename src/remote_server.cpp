@@ -279,7 +279,7 @@ namespace remote {
         GetPathByFd(struct_ptr->fd, path_buf);
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
                 << "DoFallocate file:" << path_buf << ", fd:" << struct_ptr->fd
-                << ", offset:" << struct_ptr->offset << ", len:" << struct_ptr->len  << ", ret:" << ret;
+                << ", offset:" << struct_ptr->offset << ", len:" << struct_ptr->len << ", ret:" << ret;
 #endif // MULTI_MASTER_ZHANG_LOG_PATH
         return std::to_string(ret);
     }
@@ -500,14 +500,6 @@ namespace remote {
     }
 
     std::string RemoteServer::SelectDoCall(const std::string &json) const {
-#ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
-                << "[fun ] RemoteServer::SelectDoCall().";
-#endif
-        //! TODO 整理json
-#ifdef MULTI_MASTER_ZHANG_DEBUG_JSON
-        std::cout << "[remote fun] recive json string : " << json << std::endl;
-#endif // MULTI_MASTER_ZHANG_DEBUG_JSON
         std::string fun_name = JsonHandle::FunctionNameFromJson(json);
         std::string ret;
         if (fun_name == kPwrite) {
@@ -552,28 +544,29 @@ namespace remote {
         return ret;
     }
 
-    RemoteServer::RemoteServer() {
-        //! TODO 整理格式
+    RemoteServer::RemoteServer(int listen_port)
+            : listen_port_(listen_port) {
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
                 << "RemoteServer::RemoteServer().";
+
 #ifdef REMOTE_FUN_WITH_LIBEVENT
         server_net_handle_ = new ServerLibeventHandle(this);
 #endif // REMOTE_FUN_WITH_LIBEVENT
 #ifdef REMOTE_FUN_WITH_GRPC
-        server_net_handle_ = new ServerGprcHandle(this);
+        server_net_handle_ = new ServerGprcHandle(this, listen_port_);
 #endif // REMOTE_FUN_WITH_GRPC
+
+        //! start 改变工作目录
         char path[512];
-
         char *p = getcwd(path, 512);
-        std::cout << "[remote fun] getcwd : " << path << std::endl;
-
-//        getcurdir( 0, char *directory);
+        std::cout << "[remote fun] binary path:" << path << std::endl;
 
         int ret = chdir("/home/zhangrongrong/mysql/data");
-        std::cout << "[remote fun] current path ret : " << ret << std::endl;
+        std::cout << "[remote fun] change path ret:" << (ret == 0 ? "success" : "fail") << std::endl;
 
         p = getcwd(path, 512);
-        std::cout << "[remote fun] getcwd : " << path << std::endl;
+        std::cout << "[remote fun] current work path:" << path << std::endl;
+        //! end 改变工作目录
     }
 
     RemoteServer::~RemoteServer() {

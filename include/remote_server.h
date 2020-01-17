@@ -4,8 +4,9 @@
 
 #ifndef MULTI_MASTER_REMOTE_SERVER_H
 #define MULTI_MASTER_REMOTE_SERVER_H
-
+#define _FILE_OFFSET_BITS 64
 #include "remote_type.h"
+#include "easylogger.h"
 //#include <fcntl.h>      //! for struct flock
 
 /**
@@ -60,7 +61,7 @@ namespace remote {
 
         ServerNetHandle *GetServerNetHandle() const;
 
-        explicit RemoteServer();
+        explicit RemoteServer(int );
 
         ~RemoteServer();
 
@@ -69,6 +70,7 @@ namespace remote {
         RemoteServer &operator=(const RemoteServer &) = delete;
 
     private:
+        int listen_port_;
         ServerNetHandle *server_net_handle_;
     };
 

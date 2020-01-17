@@ -20,13 +20,16 @@ namespace remote {
 
         void RunServer() override;
 
-        explicit ServerGprcHandle(RemoteServer *);
+        explicit ServerGprcHandle(RemoteServer *, int );
 
         ServerGprcHandle() = delete;
 
         ServerGprcHandle(const ServerGprcHandle &) = delete;
 
         ServerGprcHandle &operator=(const ServerGprcHandle &) = delete;
+
+    private:
+        int listen_port_;
     };
 
     class ClientGrpcHandle : public ClientNetHandle {
