@@ -35,11 +35,18 @@ namespace remote {
         ssize_t size = pwrite(struct_ptr->fd, struct_ptr->buf, struct_ptr->nbytes, struct_ptr->offset);
 #ifdef MULTI_MASTER_ZHANG_LOG_PATH
         char path_buf[1024];
+        memset(path_buf, 0, 1024);
         GetPathByFd(struct_ptr->fd, path_buf);
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
                 << "DoPwrite file:" << path_buf << ", fd:" << struct_ptr->fd << ", size:"
                 << struct_ptr->nbytes << ", offset:" << struct_ptr->offset;
+        struct stat stat1;
+//        int ret = stat(path_buf, &stat1);
+        int ret = fstat(struct_ptr->fd, &stat1);
+        EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
+        << "size of ibdata: " << stat1.st_size;
 #endif // MULTI_MASTER_ZHANG_LOG_PATH
+
         return std::to_string(size);
     }
 
