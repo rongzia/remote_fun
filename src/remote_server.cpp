@@ -40,9 +40,13 @@ namespace remote {
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
                 << "DoPwrite file:" << path_buf << ", fd:" << struct_ptr->fd << ", size:"
                 << struct_ptr->nbytes << ", offset:" << struct_ptr->offset;
+
         struct stat stat1;
-//        int ret = stat(path_buf, &stat1);
-        int ret = fstat(struct_ptr->fd, &stat1);
+        int ret;
+        ret = stat(path_buf, &stat1);
+        EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
+                << "size of ibdata: " << stat1.st_size;
+        ret = fstat(struct_ptr->fd, &stat1);
         EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
         << "size of ibdata: " << stat1.st_size;
 #endif // MULTI_MASTER_ZHANG_LOG_PATH
