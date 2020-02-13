@@ -17,6 +17,9 @@
 
 namespace remote {
 
+    void RemoteClient::remote_stop() {
+        client_net_handle_->Send(std::string("{\"fun_name\":\"stop\"}"));
+    }
 
     ssize_t RemoteClient::remote_pwrite(int fd, const void *buf, size_t nbytes, off64_t offset) {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN

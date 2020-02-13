@@ -29,6 +29,7 @@ namespace remote {
     static const std::string kMkdir = "mkdir";
     static const std::string kRmdir = "rmdir";
     static const std::string kOpendir = "opendir";
+    static const std::string kStop = "stop";
 
 
     class JsonKeyName {
@@ -50,13 +51,22 @@ namespace remote {
         }
     };
 
-
     static int GetPathByFd(int fd, char *buf) {
         char path[1024];
+        memset(path, 0, 1024);
         snprintf(path, 1024, "/proc/%ld/fd/%d", (long) getpid(), fd);
-
         int ret = readlink(path, buf, 1024);
         return ret;
+    }
+
+    static std::string GetPathByFd(int fd) {
+        char path[1024];
+        memset(path, 0, 1024);
+        snprintf(path, 1024, "/proc/%ld/fd/%d", (long) getpid(), fd);
+        char buf[1024];
+        memset(buf, 0, 1024);
+        int ret = readlink(path, buf, 1024);
+        return std::string(buf);
     }
 }
 #endif //MULTI_MASTER_REMOTE_STRING_H

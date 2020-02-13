@@ -36,6 +36,7 @@ namespace remote {
 
     class RemoteClient {
     public:
+        void remote_stop();
         /*friend*/ ssize_t remote_pwrite(int fd, const void *buf, size_t nbytes, off64_t offset);
 
         ssize_t remote_write(int fd, const void *buf, size_t nbytes);

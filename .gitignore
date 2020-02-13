@@ -3,3 +3,5 @@
 **/build/
 *.clion.source.upload.marker
 *nohup.out
+proto/json.grpc.*
+proto/json.pb.*
