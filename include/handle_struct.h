@@ -18,6 +18,16 @@ namespace remote {
 
     class StructHandle {
     public:
+        //! TODO : StructPwrite2 测试用，后期删除
+        //! <--
+        struct StructPwrite2 {
+            int no;
+            int fd;
+            char *buf;
+            size_t nbytes;
+            off64_t offset;
+        };
+        //! -->
         struct StructPwrite {
             int fd;
             char *buf;
@@ -37,7 +47,7 @@ namespace remote {
             off64_t offset;
             int whence;
         };
-        //! TODO : 还共有两个重载函数
+        //! 共有两个重载函数
         struct StructOpen {
             char *pathname;
             int flag;
@@ -55,7 +65,7 @@ namespace remote {
         struct StructClose {
             int fd;
         };
-        //! TODO : 共有三个重载函数
+        //! 共有三个重载函数
         struct StructFcntl {
             int fd;
             int cmd;
@@ -120,9 +130,8 @@ namespace remote {
         static void PrintStructOpen(StructOpen *struct_ptr);
 
         static void PrintStructStat(StructStat *struct_ptr);
+
         static void PrintStructReturnStat(struct stat *struct_ptr);
-
-
 
         static void PrintStructClose(StructClose *struct_ptr);
 

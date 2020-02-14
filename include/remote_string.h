@@ -6,8 +6,13 @@
 #define MULTI_MASTER_REMOTE_STRING_H
 
 #include <cstring>
+#include <unistd.h>
 
 namespace remote {
+    //! kPwrite2、stop 测试用
+    static const std::string kPwrite2 = "pwrite2";
+    static const std::string kStop = "stop";
+
     static const std::string kPwrite = "pwrite";
     static const std::string kWrite = "write";
     static const std::string kFsync = "fsync";
@@ -29,7 +34,9 @@ namespace remote {
     static const std::string kMkdir = "mkdir";
     static const std::string kRmdir = "rmdir";
     static const std::string kOpendir = "opendir";
-    static const std::string kStop = "stop";
+
+    static const std::string path_log_server = "/home/zhangrongrong/LOG_REMOTE_SERVER";
+    static const std::string path_log_client = "/home/zhangrongrong/LOG_REMOTE_CLIENT";
 
 
     class JsonKeyName {

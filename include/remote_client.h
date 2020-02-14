@@ -5,7 +5,6 @@
 #ifndef MULTI_MASTER_REMOTE_CLIENT_H
 #define MULTI_MASTER_REMOTE_CLIENT_H
 
-#define _FILE_OFFSET_BITS 64
 #include "remote_type.h"
 #include <vector>
 #include <thread>
@@ -36,7 +35,10 @@ namespace remote {
 
     class RemoteClient {
     public:
+        //! TODO : 以下两个个函数测试用，后期删除
         void remote_stop();
+        /*friend*/ ssize_t remote_pwrite2(int no, int fd, const void *buf, size_t nbytes, off64_t offset);
+
         /*friend*/ ssize_t remote_pwrite(int fd, const void *buf, size_t nbytes, off64_t offset);
 
         ssize_t remote_write(int fd, const void *buf, size_t nbytes);

@@ -21,12 +21,14 @@
 #ifndef MULTI_MASTER_REMOTE_TYPE_H
 #define MULTI_MASTER_REMOTE_TYPE_H
 #include <iostream>
-
+#include <exception>
 #include <cstddef>      //! for size_t
 #include <unistd.h>     //! for ssize_t
 #include <cstdlib>      //! for off64_t
 #include <sys/stat.h>   //! for mode_t, defined in /usr/include/x86_64-linux-gnu/sys/stat.h
 #include <climits>     //! 定义了各类型的最大最小值
+
+#define _FILE_OFFSET_BITS 64
 
 namespace remote {
     class RemoteType {

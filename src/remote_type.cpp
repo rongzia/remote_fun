@@ -19,6 +19,8 @@
  */
 
 #include "remote_type.h"
+#include "easylogger.h"
+#include "remote_string.h"
 
 namespace remote {
         std::string RemoteType::SizeToString(size_t val) {
@@ -47,20 +49,44 @@ namespace remote {
 
         //! or return std::strtoll(val.data(), nullptr, 10);
         ssize_t RemoteType::StringToSSize(const std::string &val) {
-            return std::stoll(val, nullptr, 10);
+            int x = -1;
+            try {
+                x = std::stoll(val, nullptr, 10);
+            } catch(std::exception &e) {
+                EasyLoggerWithTrace(path_log_client, EasyLogger::info).force_flush() << "exception error:" << e.what();
+            }
+            return x;
         }
 
         //! or return std::strtoll(val.data(), nullptr, 10);
         off64_t RemoteType::StringToOff64(const std::string &val) {
-            return std::stoll(val, nullptr, 10);
+            int x = -1;
+            try {
+                x = std::stoll(val, nullptr, 10);
+            } catch(std::exception &e) {
+                EasyLoggerWithTrace(path_log_client, EasyLogger::info).force_flush() << "exception error:" << e.what();
+            }
+            return x;
         }
 
         size_t RemoteType::StringToMode(const std::string &val) {
-            return std::stoul(val, nullptr, 10);
+            int x = -1;
+            try {
+                x = std::stoul(val, nullptr, 10);
+            } catch(std::exception &e) {
+                EasyLoggerWithTrace(path_log_client, EasyLogger::info).force_flush() << "exception error:" << e.what();
+            }
+            return x;
         }
 
         int RemoteType::StringToInt(const std::string &val) {
-            return std::stoi(val, nullptr, 10);
+            int x = -1;
+            try {
+                x = std::stoi(val, nullptr, 10);
+            } catch(std::exception &e) {
+                EasyLoggerWithTrace(path_log_client, EasyLogger::info).force_flush() << "exception error:" << e.what();
+            }
+            return x;
         }
 
 }

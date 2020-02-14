@@ -4,10 +4,10 @@
 
 #ifndef MULTI_MASTER_REMOTE_SERVER_H
 #define MULTI_MASTER_REMOTE_SERVER_H
-#define _FILE_OFFSET_BITS 64
+
 #include "remote_type.h"
 #include "easylogger.h"
-//#include <fcntl.h>      //! for struct flock
+#include <fcntl.h>      //! for struct flock
 
 /**
  * remote 函数声明里的类型和原型保持一致，转成 string 时通过包装的转换函数进行转化
@@ -18,44 +18,48 @@ namespace remote {
 
     class RemoteServer {
     public:
+        //! TODO : DoPwrite2 测试用，后期删除
+        //! <--
+        std::string DoPwrite2(std::string json);
+        //! -->
 
-        std::string DoPwrite(std::string json);
+        std::string DoPwrite(const std::string &json) const;
 
-        std::string DoWrite(std::string json);
+        std::string DoWrite(const std::string &json) const;
 
-        std::string DoFsync(const std::string &json);
+        std::string DoFsync(const std::string &json) const;
 
-        std::string DoLseek(const std::string &json);
+        std::string DoLseek(const std::string &json) const;
 
-        std::string DoOpen1(const std::string &json);
+        std::string DoOpen1(const std::string &json) const;
 
-        std::string DoOpen2(const std::string &json);
+        std::string DoOpen2(const std::string &json) const;
 
-        std::string DoStat(const std::string &json);
+        std::string DoStat(const std::string &json) const;
 
-        std::string DoClose(const std::string &json);
+        std::string DoClose(const std::string &json) const;
 
-        std::string DoFcntl1(const std::string &json);
+        std::string DoFcntl1(const std::string &json) const;
 
-        std::string DoFcntl2(const std::string &json);
+        std::string DoFcntl2(const std::string &json) const;
 
-        std::string DoFcntl3(const std::string &json);
+        std::string DoFcntl3(const std::string &json) const;
 
-        std::string DoFallocate(const std::string &json);
+        std::string DoFallocate(const std::string &json) const;
 
-        std::string DoPread(const std::string &json);
+        std::string DoPread(const std::string &json) const;
 
-        std::string DoUnlink(const std::string &json);
+        std::string DoUnlink(const std::string &json) const;
 
-        std::string DoFtruncate(const std::string &json);
+        std::string DoFtruncate(const std::string &json) const;
 
-        std::string DoRename(const std::string &json);
+        std::string DoRename(const std::string &json) const;
 
-        std::string DoMkdir(const std::string &json);
+        std::string DoMkdir(const std::string &json) const;
 
-        std::string DoRmdir(const std::string &json);
+        std::string DoRmdir(const std::string &json) const;
 
-        std::string DoOpendir(const std::string &json);
+        std::string DoOpendir(const std::string &json) const;
 
         std::string SelectDoCall(const std::string &json);
 
@@ -71,12 +75,15 @@ namespace remote {
 
     private:
         int listen_port_;
+
         ServerNetHandle *server_net_handle_;
+
+        //! TODO : 以下两个变量测试用，后期删除
+        //! <--
         ssize_t mysql_ibd_bytes_count_;
         int mysql_ibd_count_;
+        //! -->
     };
-
-
 }
 
 #endif //MULTI_MASTER_REMOTE_SERVER_H

@@ -23,8 +23,8 @@ if (NOT NO_DEBUG_REMOTE_SINGLE)
     find_library(ZLIB_LIBRARY libz.so /usr/lib/x86_64-linux-gnu/)
 endif ()
 
-add_definitions(-DMULTI_MASTER_ZHANG_LOG_FUN)
-add_definitions(-DMULTI_MASTER_ZHANG_LOG_PATH)
+add_definitions(-DMULTI_MASTER_ZHANG_LOG)
+#add_definitions(-DMULTI_MASTER_ZHANG_LOG_FUN)
 #add_definitions(-DMULTI_MASTER_ZHANG_LOG_JSON)
 
 # for libevent
@@ -54,7 +54,7 @@ add_definitions(-DMULTI_MASTER_ZHANG_LOG_PATH)
 
 
 # for grpc
- set(REMOTE_FUN_WITH_GRPC "1")
+set(REMOTE_FUN_WITH_GRPC "1")
 if (REMOTE_FUN_WITH_GRPC STREQUAL "1")
     message("use grpc")
     add_definitions(-DREMOTE_FUN_WITH_GRPC)
