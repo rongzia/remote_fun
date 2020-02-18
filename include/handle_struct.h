@@ -18,25 +18,15 @@ namespace remote {
 
     class StructHandle {
     public:
-        //! TODO : StructPwrite2 测试用，后期删除
-        //! <--
-        struct StructPwrite2 {
-            int no;
-            int fd;
-            char *buf;
-            size_t nbytes;
-            off64_t offset;
-        };
-        //! -->
         struct StructPwrite {
             int fd;
-            char *buf;
+            unsigned char *buf;
             size_t nbytes;
             off64_t offset;
         };
         struct StructWrite {
             int fd;
-            char *buf;
+            unsigned char *buf;
             size_t nbytes;
         };
         struct StructFsync {
@@ -80,13 +70,13 @@ namespace remote {
         };
         struct StructPread {
             int fd;
-            char *buf;
+            unsigned char *buf;
             size_t nbytes;
             off64_t offset;
         };
         struct StructReturnPread {
             int size;
-            char *buf;
+            unsigned char *buf;
         };
         struct StructUnlink {
             char *name;

@@ -19,32 +19,6 @@
 #include "handle_grpc.h"
 
 namespace remote {
-    //! <--
-    std::string RemoteServer::DoPwrite2(std::string json) {
-        auto *struct_ptr = new StructHandle::StructPwrite2();
-        {
-            std::map<int, std::string> struct_map = JsonHandle::FromJson(json, (void *) struct_ptr, sizeof(StructHandle::StructPwrite2));
-            auto iter = struct_map.begin();
-            struct_ptr->buf = new char[iter->second.length()];
-            memcpy(struct_ptr->buf, iter->second.data(), iter->second.length());
-        }
-        ssize_t size = pwrite(struct_ptr->fd, struct_ptr->buf, struct_ptr->nbytes, struct_ptr->offset);
-        assert(size == struct_ptr->nbytes);
-        mysql_ibd_bytes_count_ += size;
-        mysql_ibd_count_ += 1;
-#ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
-                << "no:" << struct_ptr->no
-                << ", DoPwrite2 file:" << GetPathByFd(struct_ptr->fd) << ", fd:" << struct_ptr->fd
-                << ", size:" << struct_ptr->nbytes << ", offset:" << struct_ptr->offset;
-        struct stat stat1;
-        int ret = fstat(struct_ptr->fd, &stat1);
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "size of mysql.ibd:" << stat1.st_size;
-#endif
-        return std::to_string(size);
-    }
-    //! -->
-
     std::string RemoteServer::DoPwrite(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
         EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoPwrite()";
@@ -53,14 +27,18 @@ namespace remote {
         {
             std::map<int, std::string> struct_map = JsonHandle::FromJson(json, (void *) struct_ptr, sizeof(StructHandle::StructPwrite));
             auto iter = struct_map.begin();
-            struct_ptr->buf = new char[iter->second.length()];
+            struct_ptr->buf = new unsigned char[iter->second.length()];
             memcpy(struct_ptr->buf, iter->second.data(), iter->second.length());
         }
         ssize_t size = pwrite(struct_ptr->fd, struct_ptr->buf, struct_ptr->nbytes, struct_ptr->offset);
+        assert(size == struct_ptr->nbytes);
 #ifdef MULTI_MASTER_ZHANG_LOG
         EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
                 << "DoPwrite file:" << GetPathByFd(struct_ptr->fd) << ", fd:" << struct_ptr->fd
                 << ", size:" << struct_ptr->nbytes << ", offset:" << struct_ptr->offset;
+//        struct stat stat1;
+//        int ret = fstat(struct_ptr->fd, &stat1);
+//        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "size of mysql.ibd:" << stat1.st_size;
 #endif
         return std::to_string(size);
     }
@@ -73,7 +51,7 @@ namespace remote {
         {
             std::map<int, std::string> struct_map = JsonHandle::FromJson(json, (void *) struct_ptr, sizeof(StructHandle::StructWrite));
             auto iter = struct_map.begin();
-            struct_ptr->buf = new char[iter->second.length()];
+            struct_ptr->buf = new unsigned char[iter->second.length()];
             memcpy(struct_ptr->buf, iter->second.data(), iter->second.length());
         }
         ssize_t size = write(struct_ptr->fd, struct_ptr->buf, struct_ptr->nbytes);
@@ -241,7 +219,6 @@ namespace remote {
         return std::to_string(ret);
     }
 
-    // TODO : flock
     std::string RemoteServer::DoFcntl3(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
         EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoFcntl3()";
@@ -286,7 +263,7 @@ namespace remote {
             std::map<int, std::string> struct_map = JsonHandle::FromJson(
                     json, (void *) struct_ptr, sizeof(StructHandle::StructPread));
             auto iter = struct_map.begin();
-            struct_ptr->buf = new char[struct_ptr->nbytes];
+            struct_ptr->buf = new unsigned char[struct_ptr->nbytes];
         }
         ssize_t size = pread(struct_ptr->fd, struct_ptr->buf, struct_ptr->nbytes, struct_ptr->offset);
         assert(size == struct_ptr->nbytes);
@@ -301,8 +278,9 @@ namespace remote {
             return_struct_ptr->size = size;
             return_struct_ptr->buf = struct_ptr->buf;
             return_struct_map.insert(
-                    std::make_pair((int64_t) &return_struct_ptr->buf - (int64_t) return_struct_ptr, std::string(return_struct_ptr->buf
-                                                                                                                , size)));
+                    std::make_pair((int64_t) &return_struct_ptr->buf - (int64_t) return_struct_ptr, std::string(
+                            reinterpret_cast<const char *>(return_struct_ptr->buf)
+                            , size)));
             std::string return_json = JsonHandle::ToJson(kReturnPread, return_struct_map, return_struct_ptr
                                                          , sizeof(StructHandle::StructReturnPread));
             return return_json;
@@ -479,8 +457,6 @@ namespace remote {
         std::string ret;
         if (fun_name == kPwrite) {
             ret = DoPwrite(json);
-        } else if (fun_name == kPwrite2) {
-            ret = DoPwrite2(json);
         } else if (fun_name == kWrite) {
             ret = DoWrite(json);
         } else if (fun_name == kFsync) {
@@ -521,11 +497,6 @@ namespace remote {
             //! TODO : 测试用，后期删除
             //! <--
         else if (fun_name == kStop) {
-#ifdef MULTI_MASTER_ZHANG_LOG
-            EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
-                    << "write mysql.ibd size:" << mysql_ibd_bytes_count_
-                    << ", write mysql.ibd time:" << mysql_ibd_count_;
-#endif
             ret = "null";
         }
         //! -->
@@ -553,10 +524,6 @@ namespace remote {
                                                                              << (ret == 0 ? "success" : "fail");
         getcwd(path, 1024);
         EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "current work path:" << path;
-
-        //! TODO : 测试用，后期删除
-        mysql_ibd_bytes_count_ = 0;
-        mysql_ibd_count_ = 0;
     }
 
     RemoteServer::~RemoteServer() {

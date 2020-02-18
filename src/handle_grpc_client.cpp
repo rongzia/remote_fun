@@ -32,7 +32,7 @@ namespace remote {
             return reply.ret_string();
         } else {
 #ifdef MULTI_MASTER_ZHANG_LOG
-            EasyLoggerWithTrace(path_log_client, EasyLogger::info).force_flush() << "grpc call error:" << status.error_details();
+            EasyLoggerWithTrace(path_log_client, EasyLogger::info).force_flush() << "grpc call error_details:" << status.error_details() << ", json:" << json.substr(0, 30);
 #endif
             return "grpc call error";
         }

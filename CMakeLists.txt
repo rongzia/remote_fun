@@ -24,7 +24,7 @@ if (NOT NO_DEBUG_REMOTE_SINGLE)
 endif ()
 
 add_definitions(-DMULTI_MASTER_ZHANG_LOG)
-#add_definitions(-DMULTI_MASTER_ZHANG_LOG_FUN)
+add_definitions(-DMULTI_MASTER_ZHANG_LOG_FUN)
 #add_definitions(-DMULTI_MASTER_ZHANG_LOG_JSON)
 
 # for libevent
@@ -46,10 +46,8 @@ add_definitions(-DMULTI_MASTER_ZHANG_LOG)
 #
 #    add_executable(run_server test/run_server.cpp)
 #    add_executable(test_client1 test/test_client1.cpp)
-#    add_executable(test_client2 test/test_client2.cpp)
 #    target_link_libraries(run_server remote_fun) # multi_net_io event pthread)
 #    target_link_libraries(test_client1 remote_fun) # multi_net_io event pthread)
-#    target_link_libraries(test_client2 remote_fun) # multi_net_io event pthread)
 #endif()
 
 
@@ -88,10 +86,8 @@ if (REMOTE_FUN_WITH_GRPC STREQUAL "1")
 
     add_executable(run_server test/run_server.cpp)
     add_executable(test_client1 test/test_client1.cpp)
-    add_executable(test_client2 test/test_client2.cpp)
     target_link_libraries(run_server remote_fun) # ${PROTOBUF_LIBRARY} ${GRPC_STATIC_LIBRARY} ${ZLIB_LIBRARY} pthread)
     target_link_libraries(test_client1 remote_fun) # ${PROTOBUF_LIBRARY} ${GRPC_STATIC_LIBRARY} ${ZLIB_LIBRARY} pthread)
-    target_link_libraries(test_client2 remote_fun) # ${PROTOBUF_LIBRARY} ${GRPC_STATIC_LIBRARY} ${ZLIB_LIBRARY} pthread)
 endif ()
 
 

@@ -77,12 +77,6 @@ namespace remote {
         int listen_port_;
 
         ServerNetHandle *server_net_handle_;
-
-        //! TODO : 以下两个变量测试用，后期删除
-        //! <--
-        ssize_t mysql_ibd_bytes_count_;
-        int mysql_ibd_count_;
-        //! -->
     };
 }
 

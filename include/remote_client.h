@@ -37,7 +37,7 @@ namespace remote {
     public:
         //! TODO : 以下两个个函数测试用，后期删除
         void remote_stop();
-        /*friend*/ ssize_t remote_pwrite2(int no, int fd, const void *buf, size_t nbytes, off64_t offset);
+        /*friend*/ ssize_t remote_pwrite2(int fd, const void *buf, size_t nbytes, off64_t offset);
 
         /*friend*/ ssize_t remote_pwrite(int fd, const void *buf, size_t nbytes, off64_t offset);
 
