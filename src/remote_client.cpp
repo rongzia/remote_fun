@@ -19,6 +19,29 @@ namespace remote {
         client_net_handle_->Send(std::string("{\"fun_name\":\"stop\"}"));
     }
 
+    ssize_t RemoteClient::remote_pwrite2(int fd, const void *buf, size_t nbytes, off64_t offset) {
+#ifdef MULTI_MASTER_ZHANG_LOG_FUN
+        EasyLoggerWithTrace(path_log_client, EasyLogger::info).force_flush() << "RemoteClient::remote_pwrite2()";
+#endif
+        auto *struct_ptr = new StructHandle::StructPwrite();
+        std::map<int, std::string> struct_map;
+        {
+            struct_ptr->fd = fd;
+            struct_ptr->buf = reinterpret_cast<char *>(const_cast<void *>(buf));
+            struct_ptr->nbytes = nbytes;
+            struct_ptr->offset = offset;
+            struct_map.insert(std::make_pair((int64_t) &struct_ptr->buf - (int64_t) struct_ptr
+                    , std::string(struct_ptr->buf, struct_ptr->nbytes)));
+        }
+        std::string json = JsonHandle::ToJson(kPwrite, struct_map, struct_ptr, sizeof(StructHandle::StructPwrite));
+        int size = RemoteType::StringToSSize(client_net_handle_->Send(json));
+#ifdef MULTI_MASTER_ZHANG_LOG
+        EasyLoggerWithTrace(path_log_client, EasyLogger::info).force_flush()
+                << "remote_pwrite2 fd:" << fd << ", size:" << size << ", offset:" << offset;
+#endif
+        return size;
+    }
+
     ssize_t RemoteClient::remote_pwrite(int fd, const void *buf, size_t nbytes, off64_t offset) {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
         EasyLoggerWithTrace(path_log_client, EasyLogger::info).force_flush() << "RemoteClient::remote_pwrite()";
@@ -27,24 +50,13 @@ namespace remote {
         struct_ptr->fd = fd;
         std::map<int, std::string> struct_map;
         int left_size = nbytes;
-        while (left_size > 524288) {
-            struct_ptr->buf = (unsigned char *)buf + (nbytes - left_size);
-            struct_ptr->nbytes = 524288;
+        while (left_size > 0) {
+            struct_ptr->buf = reinterpret_cast<char *>(const_cast<void *>(buf)) + (nbytes - left_size);
+            struct_ptr->nbytes = left_size > 524288 ? 524288 : left_size;
             struct_ptr->offset = offset + (nbytes - left_size);
             struct_map.clear();
             struct_map.insert(std::make_pair((int64_t) &struct_ptr->buf - (int64_t) struct_ptr
-                    , std::string(reinterpret_cast<const char *>(struct_ptr->buf), struct_ptr->nbytes)));
-            std::string json = JsonHandle::ToJson(kPwrite, struct_map, struct_ptr, sizeof(StructHandle::StructPwrite));
-            int write_size = RemoteType::StringToSSize(client_net_handle_->Send(json));
-            left_size -= write_size;
-        }
-        if(left_size > 0) {
-            struct_ptr->buf = (unsigned char *) buf + (nbytes - left_size);
-            struct_ptr->nbytes = left_size;
-            struct_ptr->offset = offset + (nbytes - left_size);
-            struct_map.clear();
-            struct_map.insert(std::make_pair((int64_t) &struct_ptr->buf - (int64_t) struct_ptr
-                    , std::string(reinterpret_cast<const char *>(struct_ptr->buf), struct_ptr->nbytes)));
+                    , std::string(struct_ptr->buf, struct_ptr->nbytes)));
             std::string json = JsonHandle::ToJson(kPwrite, struct_map, struct_ptr, sizeof(StructHandle::StructPwrite));
             int write_size = RemoteType::StringToSSize(client_net_handle_->Send(json));
             left_size -= write_size;
@@ -64,10 +76,10 @@ namespace remote {
         std::map<int, std::string> struct_map;
         {
             struct_ptr->fd = fd;
-            struct_ptr->buf = (unsigned char *) buf;
+            struct_ptr->buf = reinterpret_cast<char *>(const_cast<void *>(buf));
             struct_ptr->nbytes = nbytes;
             struct_map.insert(std::make_pair((int64_t) &struct_ptr->buf - (int64_t) struct_ptr
-                    , std::string(reinterpret_cast<const char *>(struct_ptr->buf), nbytes)));
+                    , std::string(struct_ptr->buf, nbytes)));
         }
         std::string json = JsonHandle::ToJson(kWrite, struct_map, struct_ptr, sizeof(StructHandle::StructWrite));
         //mtx.lock();
@@ -315,38 +327,61 @@ namespace remote {
         return ret;
     }
 
-    ssize_t RemoteClient::remote_pread(int fd, void *buf, size_t nbytes, off64_t offset) {
+    ssize_t RemoteClient::remote_pread2(int fd, void *buf, size_t nbytes, off64_t offset) {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_client, EasyLogger::info).force_flush() << "RemoteClient::remote_pread()";
+        EasyLoggerWithTrace(path_log_client, EasyLogger::info).force_flush() << "RemoteClient::remote_pread2()";
 #endif
         auto *struct_ptr = new StructHandle::StructPread();
         std::map<int, std::string> struct_map;
         {
             struct_ptr->fd = fd;
-//            struct_ptr->buf = (char *) buf;
-            struct_ptr->buf = new unsigned char[1];
             struct_ptr->nbytes = nbytes;
             struct_ptr->offset = offset;
         }
-
         std::string json = JsonHandle::ToJson(kPread, struct_map, struct_ptr, sizeof(StructHandle::StructPread));
         //mtx.lock();
         std::string return_json = client_net_handle_->Send(json);
         //mtx.unlock();
+        auto *return_struct_ptr = new StructHandle::StructReturnPread();
         {
-            auto *return_struct_ptr = new StructHandle::StructReturnPread();
             std::map<int, std::string> return_struct_map = JsonHandle::FromJson(
                     return_json, return_struct_ptr, sizeof(StructHandle::StructReturnPread));
             auto iter = return_struct_map.begin();
-            return_struct_ptr->buf = new unsigned char[iter->second.length()];
-            memcpy(return_struct_ptr->buf, iter->second.data(), iter->second.length());
-            memcpy(buf, iter->second.data(), iter->second.length());
+            memcpy((unsigned char *)buf, reinterpret_cast<unsigned char *>(const_cast<char *>(iter->second.data())), iter->second.length());
 #ifdef MULTI_MASTER_ZHANG_LOG
             EasyLoggerWithTrace(path_log_client, EasyLogger::info).force_flush()
-                    << "remote_pread fd:" << fd << ", size:" << return_struct_ptr->size << "offset:" << offset;
+                    << "remote_pread2 fd:" << fd << ", size:" << return_struct_ptr->size << "offset:" << offset;
 #endif
             return return_struct_ptr->size;
         }
+    }
+
+    ssize_t RemoteClient::remote_pread(int fd, void *buf, size_t nbytes, off64_t offset) {
+#ifdef MULTI_MASTER_ZHANG_LOG_FUN
+        EasyLoggerWithTrace(path_log_client, EasyLogger::info).force_flush() << "RemoteClient::remote_pread()";
+#endif
+        auto *struct_ptr = new StructHandle::StructPread();
+        auto *return_struct_ptr = new StructHandle::StructReturnPread();
+        struct_ptr->fd = fd;
+        std::map<int, std::string> struct_map;
+        int left_size = nbytes;
+        while (left_size > 0) {
+            struct_ptr->nbytes = (left_size > 524288 ? 524288 : left_size);
+            struct_ptr->offset = offset + (nbytes - left_size);
+
+            std::string return_json = client_net_handle_->Send(JsonHandle::ToJson(kPread, struct_map, struct_ptr, sizeof(StructHandle::StructPread)));
+
+            std::map<int, std::string> return_struct_map = JsonHandle::FromJson(return_json, return_struct_ptr, sizeof(StructHandle::StructReturnPread));
+            auto iter = return_struct_map.begin();
+            memcpy((unsigned char *)buf + (nbytes - left_size)
+                    , reinterpret_cast<unsigned char *>(const_cast<char *>(iter->second.data())), iter->second.length());
+            left_size -= iter->second.length();
+        }
+#ifdef MULTI_MASTER_ZHANG_LOG
+        EasyLoggerWithTrace(path_log_client, EasyLogger::info).force_flush()
+                << "remote_pread fd:" << fd << ", size:" << nbytes - left_size << ", offset:" << offset;
+#endif
+        return nbytes - left_size;
     }
 
 

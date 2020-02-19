@@ -27,7 +27,7 @@ namespace remote {
     static const std::string kFcntl3 = "fcntl3";
     static const std::string kFallocate = "fallocate";
     static const std::string kPread = "pread";
-    static const std::string kReturnPread = "pread";
+    static const std::string kReturnPread = "returnpread";
     static const std::string kUnlink = "unlink";
     static const std::string kFtruncate = "ftruncate";
     static const std::string kRename = "rename";

@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "remote_string.h"
+#include "easylogger.h"
 
 #include "my_rapidjson_size_t.h"
 #include "rapidjson/document.h"
@@ -14,26 +15,30 @@
 
 namespace remote {
 
+    //! To :
+    //! {"fun_name":"pwrite","struct_pwrite":"...","pwrite_keys":["pwrite_8"],"pwrite_ptrs":[{"pwrite_8":"..."},{"pwrite_16":"..."}]}
     std::string JsonHandle::ToJson(const std::string &fun_name
                                    , const std::map<int, std::string> &struct_map
                                    , void *struct_ptr, int struct_size) {
         rapidjson::StringBuffer string_buffer;
         rapidjson::Writer<rapidjson::StringBuffer> writer(string_buffer);
 
+        bool copy_flag = true;
+//        bool copy_flag = false;
         writer.StartObject();
         {
             //! fun_name,
             //! e.g. "fun_name":"pwrite"
             writer.Key("fun_name");
-            writer.String(fun_name.data(), fun_name.length(), true);
+            writer.String(fun_name.data(), fun_name.length(), copy_flag);
         }
         {
             //! struct_[name], the struct, contains data and ptrs
             //! e.g. "struct_pwrite":"..."
             // TODO: true 参数
-            std::string str = std::string((char *) struct_ptr, struct_size);
+            std::string str = std::string(reinterpret_cast<const char *>(const_cast<void *>(struct_ptr)), struct_size);
             writer.Key(remote::JsonKeyName::NameStruct(fun_name).data());
-            writer.String(str.data(), str.length(), true);
+            writer.String(str.data(), str.length(), copy_flag);
         }
         {
             //! [name]_keys,
@@ -53,7 +58,7 @@ namespace remote {
             for (auto &iter : struct_map) {
                 writer.StartObject();
                 writer.Key(remote::JsonKeyName::NameOffsets(fun_name, iter.first).data());
-                writer.String(iter.second.data(), iter.second.length(), true);
+                writer.String(iter.second.data(), iter.second.length(), copy_flag);
                 writer.EndObject();
             }
             writer.EndArray();
@@ -122,7 +127,7 @@ namespace remote {
                                             .substr(strlen(v_name.GetString()) + 1), nullptr, 10);
             //! ptr_str 是该指针在指向的内容，需要 copy 到 struct 指针指向的位置
 
-            std::string ptr_str = v_ptrs[i][v_keys[i].GetString()].GetString();
+            std::string ptr_str = std::string(v_ptrs[i][v_keys[i].GetString()].GetString(), v_ptrs[i][v_keys[i].GetString()].GetStringLength());
             struct_map.insert(std::make_pair(ptr_off, ptr_str));
         }
         return struct_map;

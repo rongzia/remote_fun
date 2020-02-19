@@ -20,13 +20,13 @@ namespace remote {
     public:
         struct StructPwrite {
             int fd;
-            unsigned char *buf;
+            char *buf;
             size_t nbytes;
             off64_t offset;
         };
         struct StructWrite {
             int fd;
-            unsigned char *buf;
+            char *buf;
             size_t nbytes;
         };
         struct StructFsync {
@@ -70,13 +70,13 @@ namespace remote {
         };
         struct StructPread {
             int fd;
-            unsigned char *buf;
+//            char *buf;
             size_t nbytes;
             off64_t offset;
         };
         struct StructReturnPread {
             int size;
-            unsigned char *buf;
+            char *buf;
         };
         struct StructUnlink {
             char *name;

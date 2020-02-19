@@ -67,8 +67,6 @@ namespace remote {
 
     void StructHandle::PrintStructPread(StructPread *struct_ptr) {
         std::cout << "StructPread->fd : " << struct_ptr->fd << std::endl;
-        std::string buf((char *) struct_ptr->buf, struct_ptr->nbytes);
-        std::cout << "StructPread->buf : " << buf << std::endl;
         std::cout << "StructPread->nbytes : " << struct_ptr->nbytes << std::endl;
         std::cout << "StructPread->offset : " << struct_ptr->offset << std::endl;
     }

@@ -64,6 +64,8 @@ namespace remote {
         //! 文件打洞
         /*friend*/ int remote_fallocate(int fd, int mode, off64_t offset, off64_t len);
 
+        /*friend*/ ssize_t remote_pread2(int fd, void *buf, size_t nbytes, off64_t offset) ;
+
         /*friend*/ ssize_t remote_pread(int fd, void *buf, size_t nbytes, off64_t offset) ;
 
         /*friend*/ int remote_unlink(const char *name);

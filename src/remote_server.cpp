@@ -27,18 +27,16 @@ namespace remote {
         {
             std::map<int, std::string> struct_map = JsonHandle::FromJson(json, (void *) struct_ptr, sizeof(StructHandle::StructPwrite));
             auto iter = struct_map.begin();
-            struct_ptr->buf = new unsigned char[iter->second.length()];
+            struct_ptr->buf = new char[iter->second.length()];
             memcpy(struct_ptr->buf, iter->second.data(), iter->second.length());
+            assert(iter->second.length() == struct_ptr->nbytes);
         }
-        ssize_t size = pwrite(struct_ptr->fd, struct_ptr->buf, struct_ptr->nbytes, struct_ptr->offset);
+        ssize_t size = pwrite(struct_ptr->fd, reinterpret_cast<unsigned char *>(struct_ptr->buf), struct_ptr->nbytes, struct_ptr->offset);
         assert(size == struct_ptr->nbytes);
 #ifdef MULTI_MASTER_ZHANG_LOG
         EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
                 << "DoPwrite file:" << GetPathByFd(struct_ptr->fd) << ", fd:" << struct_ptr->fd
                 << ", size:" << struct_ptr->nbytes << ", offset:" << struct_ptr->offset;
-//        struct stat stat1;
-//        int ret = fstat(struct_ptr->fd, &stat1);
-//        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "size of mysql.ibd:" << stat1.st_size;
 #endif
         return std::to_string(size);
     }
@@ -51,7 +49,7 @@ namespace remote {
         {
             std::map<int, std::string> struct_map = JsonHandle::FromJson(json, (void *) struct_ptr, sizeof(StructHandle::StructWrite));
             auto iter = struct_map.begin();
-            struct_ptr->buf = new unsigned char[iter->second.length()];
+            struct_ptr->buf = new char[iter->second.length()];
             memcpy(struct_ptr->buf, iter->second.data(), iter->second.length());
         }
         ssize_t size = write(struct_ptr->fd, struct_ptr->buf, struct_ptr->nbytes);
@@ -259,13 +257,10 @@ namespace remote {
         EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoPread()";
 #endif
         auto *struct_ptr = new StructHandle::StructPread();
-        {
-            std::map<int, std::string> struct_map = JsonHandle::FromJson(
-                    json, (void *) struct_ptr, sizeof(StructHandle::StructPread));
-            auto iter = struct_map.begin();
-            struct_ptr->buf = new unsigned char[struct_ptr->nbytes];
-        }
-        ssize_t size = pread(struct_ptr->fd, struct_ptr->buf, struct_ptr->nbytes, struct_ptr->offset);
+        JsonHandle::FromJson(json, (void *) struct_ptr, sizeof(StructHandle::StructPread));
+
+        unsigned char *buf = new unsigned char[struct_ptr->nbytes];
+        ssize_t size = pread(struct_ptr->fd, buf, struct_ptr->nbytes, struct_ptr->offset);
         assert(size == struct_ptr->nbytes);
 #ifdef MULTI_MASTER_ZHANG_LOG
         EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
@@ -276,11 +271,10 @@ namespace remote {
             auto *return_struct_ptr = new StructHandle::StructReturnPread();
             std::map<int, std::string> return_struct_map;
             return_struct_ptr->size = size;
-            return_struct_ptr->buf = struct_ptr->buf;
+            return_struct_ptr->buf = reinterpret_cast<char *>(buf);
             return_struct_map.insert(
-                    std::make_pair((int64_t) &return_struct_ptr->buf - (int64_t) return_struct_ptr, std::string(
-                            reinterpret_cast<const char *>(return_struct_ptr->buf)
-                            , size)));
+                    std::make_pair((int64_t) &return_struct_ptr->buf - (int64_t) return_struct_ptr
+                            , std::string(return_struct_ptr->buf, size)));
             std::string return_json = JsonHandle::ToJson(kReturnPread, return_struct_map, return_struct_ptr
                                                          , sizeof(StructHandle::StructReturnPread));
             return return_json;
