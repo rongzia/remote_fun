@@ -49,7 +49,7 @@ namespace remote {
         auto *struct_ptr = new StructHandle::StructPwrite();
         struct_ptr->fd = fd;
         std::map<int, std::string> struct_map;
-        int left_size = nbytes;
+        size_t left_size = nbytes;
         while (left_size > 0) {
             struct_ptr->buf = reinterpret_cast<char *>(const_cast<void *>(buf)) + (nbytes - left_size);
             struct_ptr->nbytes = left_size > 524288 ? 524288 : left_size;
@@ -141,7 +141,7 @@ namespace remote {
         auto *struct_ptr = new StructHandle::StructOpen();
         std::map<int, std::string> struct_map;
         {
-            struct_ptr->pathname = (char *) pathname;
+            struct_ptr->pathname = const_cast<char *>(pathname);
             struct_ptr->flag = flag;
             struct_map.insert(
                     std::make_pair((int64_t) &struct_ptr->pathname - (int64_t) struct_ptr
@@ -165,7 +165,7 @@ namespace remote {
         auto *struct_ptr = new StructHandle::StructOpen();
         std::map<int, std::string> struct_map;
         {
-            struct_ptr->pathname = (char *) pathname;
+            struct_ptr->pathname = const_cast<char *>(pathname);
             struct_ptr->flag = flag;
             struct_ptr->mode = mode;
             struct_map.insert(
@@ -190,7 +190,7 @@ namespace remote {
         auto *struct_ptr = new StructHandle::StructStat();
         std::map<int, std::string> struct_map;
         {
-            struct_ptr->pathname = (char *) pathname;
+            struct_ptr->pathname = const_cast<char *>(pathname);
             struct_map.insert(
                     std::make_pair((int64_t) &struct_ptr->pathname - (int64_t) struct_ptr, std::string(struct_ptr->pathname, strlen(
                             struct_ptr->pathname))));
@@ -364,7 +364,7 @@ namespace remote {
         auto *return_struct_ptr = new StructHandle::StructReturnPread();
         struct_ptr->fd = fd;
         std::map<int, std::string> struct_map;
-        int left_size = nbytes;
+        size_t left_size = nbytes;
         while (left_size > 0) {
             struct_ptr->nbytes = (left_size > 524288 ? 524288 : left_size);
             struct_ptr->offset = offset + (nbytes - left_size);
@@ -392,7 +392,7 @@ namespace remote {
         auto *struct_ptr = new StructHandle::StructUnlink();
         std::map<int, std::string> struct_map;
         {
-            struct_ptr->name = (char *) name;
+            struct_ptr->name = const_cast<char *>(name);
             struct_map.insert(std::make_pair((int64_t) &struct_ptr->name - (int64_t) struct_ptr, std::string(struct_ptr->name, strlen(
                     struct_ptr->name))));
         }
@@ -435,12 +435,12 @@ namespace remote {
         auto *struct_ptr = new StructHandle::StructRename();
         std::map<int, std::string> struct_map;
         {
-            struct_ptr->__old = (char *) __old;
-            struct_ptr->__new = (char *) __new;
+            struct_ptr->__old = const_cast<char *>(__old);
+            struct_ptr->__new = const_cast<char *>(__new);
             struct_map.insert(std::make_pair((int64_t) &struct_ptr->__old - (int64_t) struct_ptr
-                                             , std::string((char *) struct_ptr->__old, strlen(struct_ptr->__old))));
+                                             , std::string(struct_ptr->__old, strlen(struct_ptr->__old))));
             struct_map.insert(std::make_pair((int64_t) &struct_ptr->__new - (int64_t) struct_ptr
-                                             , std::string((char *) struct_ptr->__new, strlen(struct_ptr->__new))));
+                                             , std::string(struct_ptr->__new, strlen(struct_ptr->__new))));
         }
         std::string json = JsonHandle::ToJson(kRename, struct_map, struct_ptr, sizeof(StructHandle::StructRename));
         //mtx.lock();
@@ -460,7 +460,7 @@ namespace remote {
         auto *struct_ptr = new StructHandle::StructMkdir();
         std::map<int, std::string> struct_map;
         {
-            struct_ptr->path = (char *) path;
+            struct_ptr->path = const_cast<char *>(path);
             struct_ptr->mode = mode;
             struct_map.insert(
                     std::make_pair((int64_t) &struct_ptr->path - (int64_t) struct_ptr, std::string((char *) struct_ptr->path, strlen(
@@ -483,7 +483,7 @@ namespace remote {
         auto *struct_ptr = new StructHandle::StructRmdir();
         std::map<int, std::string> struct_map;
         {
-            struct_ptr->path = (char *) path;
+            struct_ptr->path = const_cast<char *>(path);
             struct_map.insert(std::make_pair((int64_t) &struct_ptr->path - (int64_t) struct_ptr, std::string(struct_ptr->path, strlen(
                     struct_ptr->path))));
         }
@@ -505,7 +505,7 @@ namespace remote {
         auto *struct_ptr = new StructHandle::StructOpendir();
         std::map<int, std::string> struct_map;
         {
-            struct_ptr->basedir = (char *) basedir.data();
+            struct_ptr->basedir = const_cast<char *>(basedir.data());
             struct_ptr->recursive = recursive;
             struct_map.insert(std::make_pair((int64_t) &struct_ptr->basedir - (int64_t) struct_ptr, std::string(struct_ptr->basedir, strlen(
                     struct_ptr->basedir))));

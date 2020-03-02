@@ -416,9 +416,9 @@ namespace remote {
         }
     };
 
+    //! 测试用
     void PrintVector(std::vector<remote::StructHandle::Entry> entry) {
         for (auto iter : entry) {
-            //! 测试用
             std::cout << "path : " << iter.m_path << ", depth : " << iter.m_depth << std::endl;
         }
     }
@@ -435,7 +435,7 @@ namespace remote {
             memcpy(struct_ptr->basedir, iter->second.data(), iter->second.length());
             struct_ptr->basedir[iter->second.length()] = '\0';
         }
-        StructHandle::PrintStructOpendir(struct_ptr);
+
         std::vector<StructHandle::Entry> vp;
         DirWalk(StructHandle::Entry(struct_ptr->basedir, 0), struct_ptr->recursive, &vp);
         //! TODO : remove PrintVector

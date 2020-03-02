@@ -86,8 +86,10 @@ if (REMOTE_FUN_WITH_GRPC STREQUAL "1")
 
     add_executable(run_server test/run_server.cpp)
     add_executable(test_client1 test/test_client1.cpp)
+    add_executable(test_dir test/test_dir.cpp)
     target_link_libraries(run_server remote_fun) # ${PROTOBUF_LIBRARY} ${GRPC_STATIC_LIBRARY} ${ZLIB_LIBRARY} pthread)
     target_link_libraries(test_client1 remote_fun) # ${PROTOBUF_LIBRARY} ${GRPC_STATIC_LIBRARY} ${ZLIB_LIBRARY} pthread)
+    target_link_libraries(test_dir remote_fun) # ${PROTOBUF_LIBRARY} ${GRPC_STATIC_LIBRARY} ${ZLIB_LIBRARY} pthread)
 endif ()
 
 

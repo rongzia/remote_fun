@@ -170,8 +170,7 @@ namespace remote {
             path.SetString(iter.m_path.data(), iter.m_path.length(), document.GetAllocator());
             depth.SetInt(iter.m_depth);
             object.AddMember(rapidjson::StringRef("depth"), depth, document.GetAllocator());
-            object.AddMember(rapidjson::StringRef("path"), path
-                             , document.GetAllocator());
+            object.AddMember(rapidjson::StringRef("path"), path, document.GetAllocator());
             array_objects.PushBack(object, document.GetAllocator());
         }
         document.AddMember(rapidjson::StringRef("vector_dir"), array_objects, document.GetAllocator());
@@ -190,7 +189,7 @@ namespace remote {
         rapidjson::Value &dir_vector = document["vector_dir"];
 
         for (rapidjson::SizeType i = 0; i < dir_vector.Size(); i++) {
-            std::string path = dir_vector[i]["path"].GetString();
+            std::string path(dir_vector[i]["path"].GetString(), dir_vector[i]["path"].GetStringLength());
             int depth = dir_vector[i]["depth"].GetInt();
             vp.push_back(StructHandle::Entry(path, depth));
         }
