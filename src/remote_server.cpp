@@ -390,6 +390,9 @@ namespace remote {
     };
 
     void DirWalk(StructHandle::Entry current, bool recursive, std::vector<StructHandle::Entry> *vp) {
+        if(0 != access(current.m_path.data(), F_OK)){
+            return;
+        }
         DIR *parent = opendir(current.m_path.c_str());
         dirent *dirent = nullptr;
         for (;;) {
