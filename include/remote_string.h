@@ -7,6 +7,7 @@
 
 #include <cstring>
 #include <unistd.h>
+#include "multi_macro.h"
 
 namespace remote {
     //! kPwrite2、stop 测试用
@@ -35,8 +36,8 @@ namespace remote {
     static const std::string kRmdir = "rmdir";
     static const std::string kOpendir = "opendir";
 
-    static const std::string path_log_server = "/home/zhangrongrong/LOG_REMOTE_SERVER";
-    static const std::string path_log_client = "/home/zhangrongrong/LOG_REMOTE_CLIENT";
+//    static const std::string multi_master::path_log_server = "/home/zhangrongrong/LOG_REMOTE_SERVER";
+//    static const std::string multi_master::path_log_client = "/home/zhangrongrong/LOG_REMOTE_CLIENT";
 
 
     class JsonKeyName {

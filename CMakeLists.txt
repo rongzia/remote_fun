@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 
 message("---------------------------- start MULTI_MASTER_ZHANG")
 message("building remote_fun")
+
+# 单独编译 remote_fun 模块
 if (NOT NO_DEBUG_REMOTE_SINGLE)
     message("debug remote fun single")
     ADD_DEFINITIONS(-DRAPIDJSON_NO_SIZETYPEDEFINE)
@@ -16,6 +18,7 @@ if (NOT NO_DEBUG_REMOTE_SINGLE)
     set(event ${CMAKE_CURRENT_SOURCE_DIR}/../../../extra/multi_master/remote_fun/lib/libevent.a)
 
     # for grpc
+    # 单独编译 remote_fun 时，需要使用系统安装的 protobuf
     set(PROTOBUF_ROOT $ENV{HOME}/.local/protobuf-3.6.1)
     include(cmake/protobuf.cmake)
     set(GRPC_ROOT $ENV{HOME}/.local/grpc-v1.23.x)
@@ -23,33 +26,35 @@ if (NOT NO_DEBUG_REMOTE_SINGLE)
     find_library(ZLIB_LIBRARY libz.so /usr/lib/x86_64-linux-gnu/)
 endif ()
 
-add_definitions(-DMULTI_MASTER_ZHANG_LOG)
-add_definitions(-DMULTI_MASTER_ZHANG_LOG_FUN)
+# MULTI_MASTER_ZHANG_LOG 用于 debug；MULTI_MASTER_ZHANG_LOG_FUN 用于打印函数的调用，排查问题出在那个函数内；MULTI_MASTER_ZHANG_LOG_JSON debug json 字符串
+#add_definitions(-DMULTI_MASTER_ZHANG_LOG)
+#add_definitions(-DMULTI_MASTER_ZHANG_LOG_FUN)
 #add_definitions(-DMULTI_MASTER_ZHANG_LOG_JSON)
 
 # for libevent
-#set(REMOTE_FUN_WITH_LIBEVENT "1")
-#if (REMOTE_FUN_WITH_LIBEVENT STREQUAL "1")
-#    message("use libevent")
-#    add_definitions(-DREMOTE_FUN_WITH_LIBEVENT)
-#
-#    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../../../multi-master-tool/multi_net_io/include/)   # for libevent_handle.h
-##    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../extra/libevent.bak/include) # for libevent
-#
-#    set(REMOTE_SRCS
-#            src/remote_client.cpp src/remote_server.cpp
-#            src/handle_json.cpp src/handle_struct.cpp src/remote_type.cpp
-#            src/handle_net.cpp src/handle_libevent_client.cpp src/handle_libevent_server.cpp)
-#
-#    add_library(remote_fun STATIC ${REMOTE_SRCS})
-#    target_link_libraries(remote_fun ${multi_net_io} ${event} pthread)
-#
-#    add_executable(run_server test/run_server.cpp)
-#    add_executable(test_client1 test/test_client1.cpp)
-#    target_link_libraries(run_server remote_fun) # multi_net_io event pthread)
-#    target_link_libraries(test_client1 remote_fun) # multi_net_io event pthread)
-#endif()
+#[[
+set(REMOTE_FUN_WITH_LIBEVENT "1")
+if (REMOTE_FUN_WITH_LIBEVENT STREQUAL "1")
+    message("use libevent")
+    add_definitions(-DREMOTE_FUN_WITH_LIBEVENT)
 
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../../../multi-master-tool/multi_net_io/include/)   # for libevent_handle.h
+#    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../../extra/libevent.bak/include) # for libevent
+
+    set(REMOTE_SRCS
+            src/remote_client.cpp src/remote_server.cpp
+            src/handle_json.cpp src/handle_struct.cpp src/remote_type.cpp
+            src/handle_net.cpp src/handle_libevent_client.cpp src/handle_libevent_server.cpp)
+
+    add_library(remote_fun STATIC ${REMOTE_SRCS})
+    target_link_libraries(remote_fun ${multi_net_io} ${event} pthread)
+
+    add_executable(run_server test/run_server.cpp)
+    add_executable(test_client1 test/test_client1.cpp)
+    target_link_libraries(run_server remote_fun) # multi_net_io event pthread)
+    target_link_libraries(test_client1 remote_fun) # multi_net_io event pthread)
+endif()
+]]
 
 # for grpc
 set(REMOTE_FUN_WITH_GRPC "1")
@@ -70,7 +75,8 @@ if (REMOTE_FUN_WITH_GRPC STREQUAL "1")
     execute_process(COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
             -I ${CMAKE_CURRENT_SOURCE_DIR}/proto
             --grpc_out=${CMAKE_CURRENT_SOURCE_DIR}/proto
-            --plugin=protoc-gen-grpc=$ENV{HOME}/.local/grpc-v1.23.x/bin/grpc_cpp_plugin
+#            --plugin=protoc-gen-grpc=$ENV{HOME}/.local/grpc-v1.23.x/bin/grpc_cpp_plugin
+            --plugin=protoc-gen-grpc=${GRPC_CPP_PLUGIN_EXECUTABLE}
             ${CMAKE_CURRENT_SOURCE_DIR}/proto/json.proto)
 
     include_directories(proto)

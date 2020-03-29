@@ -53,7 +53,7 @@ namespace remote {
             try {
                 x = std::stoll(val, nullptr, 10);
             } catch(std::exception &e) {
-                EasyLoggerWithTrace(path_log_client, EasyLogger::info).force_flush() << "exception error:" << e.what();
+                EasyLoggerWithTrace(multi_master::path_log_client, EasyLogger::info).force_flush() << "exception error:" << e.what();
             }
             return x;
         }
@@ -64,7 +64,7 @@ namespace remote {
             try {
                 x = std::stoll(val, nullptr, 10);
             } catch(std::exception &e) {
-                EasyLoggerWithTrace(path_log_client, EasyLogger::info).force_flush() << "exception error:" << e.what();
+                EasyLoggerWithTrace(multi_master::path_log_client, EasyLogger::info).force_flush() << "exception error:" << e.what();
             }
             return x;
         }
@@ -74,7 +74,7 @@ namespace remote {
             try {
                 x = std::stoul(val, nullptr, 10);
             } catch(std::exception &e) {
-                EasyLoggerWithTrace(path_log_client, EasyLogger::info).force_flush() << "exception error:" << e.what();
+                EasyLoggerWithTrace(multi_master::path_log_client, EasyLogger::info).force_flush() << "exception error:" << e.what();
             }
             return x;
         }
@@ -84,7 +84,7 @@ namespace remote {
             try {
                 x = std::stoi(val, nullptr, 10);
             } catch(std::exception &e) {
-                EasyLoggerWithTrace(path_log_client, EasyLogger::info).force_flush() << "exception error:" << e.what();
+                EasyLoggerWithTrace(multi_master::path_log_client, EasyLogger::info).force_flush() << "exception error:" << e.what();
             }
             return x;
         }

@@ -20,10 +20,10 @@ namespace remote {
 
         server_port_ = 50051;
         if (!libeventHandle_->init_handle(server_port_)) {
-            EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
+            EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
                     << "init error";
         }
-        EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
                 << "server listen on port: " << server_port_;
         std::cout << "Server listening on:" << server_port_ << std::endl;
 
@@ -32,7 +32,7 @@ namespace remote {
     }
 
     void ServerLibeventHandle::RunServer() {
-        EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
                 << "ServerLibeventHandle::RunServer().";
 
         while (1) {
@@ -42,12 +42,10 @@ namespace remote {
             int readsize_1 = libeventHandle_->wait_recive(ListenArray()[0], buffer_);
             if (readsize_1 > 0) {
 
-#ifdef MULTI_MASTER_ZHANG_LOG_FUN
-                EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
-                        << "server recive size:" << readsize_1;
-#endif // MULTI_MASTER_ZHANG_LOG_FUN
 #ifdef MULTI_MASTER_ZHANG_LOG_JSON
-                EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
+                EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
+                        << "server recive size:" << readsize_1;
+                EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
                         << "server recive content:" << buffer_;
 #endif // MULTI_MASTER_ZHANG_LOG_JSON
 
@@ -55,22 +53,13 @@ namespace remote {
                 std::string ret = ServerNetHandle::RemoteServerHandle()->SelectDoCall(json);
                 libeventHandle_->send(ListenArray()[0], ret.data(), ret.length());
 
-#ifdef MULTI_MASTER_ZHANG_LOG_FUN
-                EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
-                        << "server send size:" << ret.length();
-#endif // MULTI_MASTER_ZHANG_LOG_FUN
 #ifdef MULTI_MASTER_ZHANG_LOG_JSON
-                EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
+                EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
+                        << "server send size:" << ret.length();
+                EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
                         << "server send content:" << ret;
 #endif // MULTI_MASTER_ZHANG_LOG_JSON
             }
-
-//            if(libeventHandle_->get_listen_connection_count() > 0) {
-//#ifdef MULTI_MASTER_ZHANG_LOG_REMOTE
-//                EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
-//                        << "get_listen_connection_count : " << libeventHandle_->get_listen_connection_count();
-//#endif // MULTI_MASTER_ZHANG_LOG_REMOTE
-//            }
         }
     }
 }

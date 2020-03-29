@@ -19,11 +19,11 @@ namespace remote {
         eventHandle_ = new LibeventHandle();
 
         if (!eventHandle_->init_handle(listen_port_)) {
-            EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
+            EasyLoggerWithTrace(multi_master::path_log_client, EasyLogger::info).force_flush()
                     << "init error";
         }
         conn_id_ = eventHandle_->get_connection_id(connect_to_addr_.data(), connect_to_port_, true);
-        EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_client, EasyLogger::info).force_flush()
                 << "connect to: " << connect_to_addr << ":" << connect_to_port << ", listen port : " << listen_port_;
 
         //! return 0, represent success.
@@ -34,12 +34,10 @@ namespace remote {
         //! 先发送，并等待接收
         bool ret = eventHandle_->send(conn_id_, json.data(), json.length());
 
-#ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
-                << "client send size:" << json.length();
-#endif // MULTI_MASTER_ZHANG_LOG_FUN
 #ifdef MULTI_MASTER_ZHANG_LOG_JSON
-        EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_client, EasyLogger::info).force_flush()
+                << "client send size:" << json.length();
+        EasyLoggerWithTrace(multi_master::path_log_client, EasyLogger::info).force_flush()
                 << "client send content:" << json;
 #endif // MULTI_MASTER_ZHANG_LOG_JSON
 
@@ -48,12 +46,10 @@ namespace remote {
         //! std::cout << "[remote fun] recived buffer size : " << eventHandle_->get_recive_buffer_length(conn_id_) << std::endl;
         int buffer_len = eventHandle_->wait_recive(conn_id_, buffer_);
 
-#ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
-                << "client recive size:" << buffer_len;
-#endif // MULTI_MASTER_ZHANG_LOG_FUN
 #ifdef MULTI_MASTER_ZHANG_LOG_JSON
-        EasyLoggerWithTrace("/home/zhangrongrong/LOG_REMOTE_SERVER", EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_client, EasyLogger::info).force_flush()
+                << "client recive size:" << buffer_len;
+        EasyLoggerWithTrace(multi_master::path_log_client, EasyLogger::info).force_flush()
                 << "client recive content:" << buffer_;
 #endif // MULTI_MASTER_ZHANG_LOG_JSON
 

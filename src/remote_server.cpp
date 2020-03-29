@@ -21,7 +21,7 @@
 namespace remote {
     std::string RemoteServer::DoPwrite(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoPwrite()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoPwrite()";
 #endif
         auto *struct_ptr = new StructHandle::StructPwrite();
         {
@@ -34,7 +34,7 @@ namespace remote {
         ssize_t size = pwrite(struct_ptr->fd, reinterpret_cast<unsigned char *>(struct_ptr->buf), struct_ptr->nbytes, struct_ptr->offset);
         assert(size == struct_ptr->nbytes);
 #ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
                 << "DoPwrite file:" << GetPathByFd(struct_ptr->fd) << ", fd:" << struct_ptr->fd
                 << ", size:" << struct_ptr->nbytes << ", offset:" << struct_ptr->offset;
 #endif
@@ -43,7 +43,7 @@ namespace remote {
 
     std::string RemoteServer::DoWrite(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoWrite()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoWrite()";
 #endif
         auto *struct_ptr = new StructHandle::StructWrite();
         {
@@ -54,7 +54,7 @@ namespace remote {
         }
         ssize_t size = write(struct_ptr->fd, struct_ptr->buf, struct_ptr->nbytes);
 #ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
                 << "DoWrite file:" << GetPathByFd(struct_ptr->fd) << ", fd:" << struct_ptr->fd << ", size:" << struct_ptr->nbytes;
 #endif
         return std::to_string(size);
@@ -62,7 +62,7 @@ namespace remote {
 
     std::string RemoteServer::DoFsync(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoFsync()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoFsync()";
 #endif
         auto *struct_ptr = new StructHandle::StructFsync();
         {
@@ -70,7 +70,7 @@ namespace remote {
         }
         int ret = fsync(struct_ptr->fd);
 #ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
                 << "DoFsync file:" << GetPathByFd(struct_ptr->fd) << ", fd:" << struct_ptr->fd << ", ret:" << ret;
 #endif
         return std::to_string(ret);
@@ -78,7 +78,7 @@ namespace remote {
 
     std::string RemoteServer::DoLseek(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoLseek()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoLseek()";
 #endif
         auto *struct_ptr = new StructHandle::StructLseek();
         {
@@ -88,7 +88,7 @@ namespace remote {
         //! TODO
 //        assert(offset == struct_ptr->offset);
 #ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
                 << "DoLseek file:" << GetPathByFd(struct_ptr->fd) << ", fd:" << struct_ptr->fd << ", offset:" << offset;
 #endif
         return std::to_string(offset);
@@ -96,7 +96,7 @@ namespace remote {
 
     std::string RemoteServer::DoOpen1(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoOpen1()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoOpen1()";
 #endif
         auto *struct_ptr = new StructHandle::StructOpen();
         {
@@ -108,7 +108,7 @@ namespace remote {
         }
         int fd = open(struct_ptr->pathname, struct_ptr->flag);
 #ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
                 << "DoOpen1 file:" << struct_ptr->pathname << ", fd:" << fd;
 #endif
         return std::to_string(fd);
@@ -117,7 +117,7 @@ namespace remote {
 
     std::string RemoteServer::DoOpen2(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoOpen2()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoOpen2()";
 #endif
         auto *struct_ptr = new StructHandle::StructOpen();
         {
@@ -130,7 +130,7 @@ namespace remote {
 
         int fd = open(struct_ptr->pathname, struct_ptr->flag, struct_ptr->mode);
 #ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
                 << "DoOpen2 file:" << struct_ptr->pathname << ", fd:" << fd;
 #endif
         return RemoteType::IntToString(fd);
@@ -138,7 +138,7 @@ namespace remote {
 
     std::string RemoteServer::DoStat(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoStat()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoStat()";
 #endif
         auto *struct_ptr = new StructHandle::StructStat();
         {
@@ -153,7 +153,7 @@ namespace remote {
         ret = stat(struct_ptr->pathname, &(struct_ptr->stat1));
 
 #ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
                 << "DoStat file:" << struct_ptr->pathname << ", ret:" << ret
                 << ", errno:" << errno << ", ENOENT:" << ENOENT;
 #endif
@@ -171,7 +171,7 @@ namespace remote {
 
     std::string RemoteServer::DoClose(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoClose()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoClose()";
 #endif
         auto *struct_ptr = new StructHandle::StructClose();
         {
@@ -179,7 +179,7 @@ namespace remote {
         }
         int ret = close(struct_ptr->fd);
 #ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
                 << "DoClose file:" << GetPathByFd(struct_ptr->fd) << ", fd:" << struct_ptr->fd << ", ret:" << ret;
 #endif
         return std::to_string(ret);
@@ -187,7 +187,7 @@ namespace remote {
 
     std::string RemoteServer::DoFcntl1(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoFcntl1()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoFcntl1()";
 #endif
         auto *struct_ptr = new StructHandle::StructFcntl();
         {
@@ -195,7 +195,7 @@ namespace remote {
         }
         int ret = fcntl(struct_ptr->fd, struct_ptr->cmd);
 #ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
                 << "DoFcntl1 file:" << GetPathByFd(struct_ptr->fd) << ", fd:" << struct_ptr->fd << ", ret:" << ret;
 #endif
         return std::to_string(ret);
@@ -203,7 +203,7 @@ namespace remote {
 
     std::string RemoteServer::DoFcntl2(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoFcntl2()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoFcntl2()";
 #endif
         auto *struct_ptr = new StructHandle::StructFcntl();
         {
@@ -211,7 +211,7 @@ namespace remote {
         }
         int ret = fcntl(struct_ptr->fd, struct_ptr->cmd, struct_ptr->arg);
 #ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
                 << "DoFcntl2 file:" << GetPathByFd(struct_ptr->fd) << ", fd:" << struct_ptr->fd << ", ret:" << ret;
 #endif
         return std::to_string(ret);
@@ -219,7 +219,7 @@ namespace remote {
 
     std::string RemoteServer::DoFcntl3(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoFcntl3()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoFcntl3()";
 #endif
         auto *struct_ptr = new StructHandle::StructFcntl();
         {
@@ -228,7 +228,7 @@ namespace remote {
 
         int ret = ::fcntl(struct_ptr->fd, struct_ptr->cmd, &(struct_ptr->lock));
 #ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
                 << "DoFcntl3 file:" << GetPathByFd(struct_ptr->fd) << ", fd:" << struct_ptr->fd << ", ret:" << ret;
 #endif
         return std::to_string(ret);
@@ -236,7 +236,7 @@ namespace remote {
 
     std::string RemoteServer::DoFallocate(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoFallocate()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoFallocate()";
 #endif
         auto *struct_ptr = new StructHandle::StructFallocate();
         {
@@ -244,7 +244,7 @@ namespace remote {
         }
         int ret = fallocate(struct_ptr->fd, struct_ptr->mode, struct_ptr->offset, struct_ptr->len);
 #ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
                 << "DoFallocate file:" << GetPathByFd(struct_ptr->fd) << ", fd:" << struct_ptr->fd
                 << ", offset:" << struct_ptr->offset << ", len:" << struct_ptr->len << ", ret:" << ret;
 #endif
@@ -254,7 +254,7 @@ namespace remote {
     // TODO : read buffer
     std::string RemoteServer::DoPread(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoPread()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoPread()";
 #endif
         auto *struct_ptr = new StructHandle::StructPread();
         JsonHandle::FromJson(json, (void *) struct_ptr, sizeof(StructHandle::StructPread));
@@ -263,7 +263,7 @@ namespace remote {
         ssize_t size = pread(struct_ptr->fd, buf, struct_ptr->nbytes, struct_ptr->offset);
         assert(size == struct_ptr->nbytes);
 #ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
                 << "DoPread file:" << GetPathByFd(struct_ptr->fd) << ", fd:" << struct_ptr->fd
                 << ", size:" << size << ", offset:" << struct_ptr->offset;
 #endif
@@ -283,7 +283,7 @@ namespace remote {
 
     std::string RemoteServer::DoUnlink(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoUnlink()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoUnlink()";
 #endif
         auto *struct_ptr = new StructHandle::StructUnlink();
         {
@@ -295,14 +295,14 @@ namespace remote {
         }
         int ret = unlink(struct_ptr->name);
 #ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "DoUnlink file:" << struct_ptr->name << ", ret:" << ret;
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "DoUnlink file:" << struct_ptr->name << ", ret:" << ret;
 #endif
         return std::to_string(ret);
     }
 
     std::string RemoteServer::DoFtruncate(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoFtruncate()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoFtruncate()";
 #endif
         auto *struct_ptr = new StructHandle::StructFtruncate();
         {
@@ -310,7 +310,7 @@ namespace remote {
         }
         int ret = ftruncate(struct_ptr->fd, struct_ptr->length);
 #ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
         << "DoFtruncate file:" << GetPathByFd(struct_ptr->fd) << ", fd:" << struct_ptr->fd << ", ret:" << ret;
 #endif
         return std::to_string(ret);
@@ -318,7 +318,7 @@ namespace remote {
 
     std::string RemoteServer::DoRename(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoRename()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoRename()";
 #endif
         auto *struct_ptr = new StructHandle::StructRename();
         {
@@ -334,7 +334,7 @@ namespace remote {
         }
         int ret = rename(struct_ptr->__old, struct_ptr->__new);
 #ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush()
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush()
         << "DoRename:" << struct_ptr->__old << " to " << struct_ptr->__new << ", ret:" << ret;
 #endif
         return std::to_string(ret);
@@ -342,7 +342,7 @@ namespace remote {
 
     std::string RemoteServer::DoMkdir(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoMkdir()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoMkdir()";
 #endif
         auto *struct_ptr = new StructHandle::StructMkdir();
         {
@@ -354,14 +354,14 @@ namespace remote {
         }
         int ret = mkdir(struct_ptr->path, struct_ptr->mode);
 #ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "DoMkdir:" << struct_ptr->path << ", ret:" << ret;
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "DoMkdir:" << struct_ptr->path << ", ret:" << ret;
 #endif
         return std::to_string(ret);
     }
 
     std::string RemoteServer::DoRmdir(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoRmdir()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoRmdir()";
 #endif
         auto *struct_ptr = new StructHandle::StructRmdir();
         {
@@ -373,7 +373,7 @@ namespace remote {
         }
         int ret = rmdir(struct_ptr->path);
 #ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "DoRmdir:" << struct_ptr->path << ", ret:" << ret;
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "DoRmdir:" << struct_ptr->path << ", ret:" << ret;
 #endif
         return std::to_string(ret);
     }
@@ -428,7 +428,7 @@ namespace remote {
 
     std::string RemoteServer::DoOpendir(const std::string &json) const {
 #ifdef MULTI_MASTER_ZHANG_LOG_FUN
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoOpendir()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::DoOpendir()";
 #endif
         auto *struct_ptr = new StructHandle::StructOpendir();
         {
@@ -444,7 +444,7 @@ namespace remote {
         //! TODO : remove PrintVector
         PrintVector(vp);
 #ifdef MULTI_MASTER_ZHANG_LOG
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "DoOpendir dir:" << struct_ptr->basedir;
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "DoOpendir dir:" << struct_ptr->basedir;
 #endif
         return JsonHandle::DirVectorToJson(vp);
     }
@@ -502,7 +502,7 @@ namespace remote {
 
     RemoteServer::RemoteServer(int listen_port)
             : listen_port_(listen_port) {
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::RemoteServer()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::RemoteServer()";
 
 #ifdef REMOTE_FUN_WITH_LIBEVENT
         server_net_handle_ = new ServerLibeventHandle(this);
@@ -512,19 +512,20 @@ namespace remote {
 #endif // REMOTE_FUN_WITH_GRPC
 
         //! 改变工作目录
-        char path[1024];
-        memset(path, 0, 1024);
-        getcwd(path, 1024);
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "binary path:" << path;
-        int ret = chdir("/home/zhangrongrong/mysql/data");
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "change path "
+//        char path[1024];
+//        memset(path, 0, 1024);
+//        getcwd(path, 1024);
+        char *path = getcwd(NULL, 1024);
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "binary path:" << path;
+        int ret = chdir(multi_master::remote_server_run_path.data());
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "change path "
                                                                              << (ret == 0 ? "success" : "fail");
-        getcwd(path, 1024);
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "current work path:" << path;
+        path = getcwd(NULL, 1024);
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "current work path:" << path;
     }
 
     RemoteServer::~RemoteServer() {
-        EasyLoggerWithTrace(path_log_server, EasyLogger::info).force_flush() << "RemoteServer::~RemoteServer()";
+        EasyLoggerWithTrace(multi_master::path_log_server, EasyLogger::info).force_flush() << "RemoteServer::~RemoteServer()";
     }
 
     ServerNetHandle *RemoteServer::GetServerNetHandle() const {
